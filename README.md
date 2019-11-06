@@ -13,6 +13,7 @@ A brief description of the project's function and purpose
 ## Documentation
 
 ## Hardware
+* [Bill of Materials](https://docs.google.com/spreadsheets/d/1JZTtaZDqRExDhAQ4nWuzvwM8wr-2eBfdn1ZWpzmeVy4/edit#gid=0)
 
 ## Firmware
 
