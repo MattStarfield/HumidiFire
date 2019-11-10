@@ -20,7 +20,6 @@
   
   //#include <SD.h>         //included in Arduino IDE core
   
-  //#include <RTClib.h>     //https://github.com/adafruit/RTClib
   //#include <DHT.h>        // Updated to using Adafruit DHT Library https://github.com/adafruit/DHT-sensor-library
                           // Requires Adafruit Libraries "DHT_sensor_library" and "Adafruit_Unified_Sensor"
                           // Setup Instructions here: https://learn.adafruit.com/dht/using-a-dhtxx-sensor
@@ -86,65 +85,31 @@
 
   // Pin Defines
   //-------------
+  #define PIN_ONBOARD_LED                       13   // Built-in LED pin
   #define PIN_CS                                10  // output - Chip Select for SD Card
   
-  #define PIN_BLOWER                            5   // output - PWM control MOSFET to Heating Element A
-  #define PIN_MISTER                            6   // output - PWM control MOSFET to Heating Element B
-  #define PIN_CHE                               9   // output - PWM control MOSFET to Heating Element C
-
-  // use IDE pin number for Analog Pins for Feather M0 to use pin name as argument in function
-  #define PIN_ATS                               A1   // A1 input - AnalogRead Thermistor A
-  #define PIN_BTS                               A2   // A2 input - AnalogRead Thermistor B
-  #define PIN_CTS                               A3   // A3 input - AnalogRead Thermistor C
-  #define PIN_DHT                               A4   // A4 input - DigitalRead DHT11
-
-  #define PIN_ONBOARD_LED                       13   // Built-in LED pin
+  #define PIN_FAN                               5   // output - PWM control MOSFET to Blower Fan
+  #define PIN_MIST                              6   // output - PWM control MOSFET to Mister / Bubbler
 
   // Sensor Settings
   //-------------
-  #define DHTTYPE                               DHT11     // Tells Adafruit DHTXX Library which type of DHT sensor to use
+  //#define DHTTYPE                               DHT11     // Tells Adafruit DHTXX Library which type of DHT sensor to use
   
-  #define TS_SERIES_RESISTOR                    10000         //(Ohm) value of 1% series resistors used for NTC Thermistors
-  #define TS_NOMINAL_RESISTANCE                 (10000+1200)     // (Ohm) nominal resistance of NTC Thermistor at 25 degrees C + resitance of wire
-  #define TS_NOMINAL_TEMP                       25        // (deg C) temperature for nominal resistance value (almost always 25 C)
-  #define TS_NUM_SAMPLES                        5         // (samples) number of samples to average thermistor readings over
-  #define TS_BETA_COEFFICIENT                   3950      // (beta) The beta coefficient of the thermistor (usually 3000-4000)
-
   // Serial Settings
   //-------------
   #define SERIAL_BAUD_RATE                      115200    // (bps)
 
-  // Heater Settings
+  // PWM Settings
   //-------------
   #define PWM_DEFAULT_PERCENT                   0.50      // (%) default PWM duty cycle
-  #define PWM_INCREMENT                         0.05      // (%) controller increments
+  #define PWM_INCREMENT                         0.004      // (%) controller increments
   #define PWM_MAX                               1.00      // (%) Max PWM duty cycle % allowed in software
   #define PWM_MIN                               0.00      // (%) Min PWM duty cycle % allowed in software
-
-  #define DURATION_DEFAULT_SEC                  15        // (sec) initial heating cycle duration
-  #define DURATION_INCREMENT                    1         // (sec) increment/decrement interval
-  #define DURATION_MAX                          30        // (sec) Max heater "on time" duration
-  #define DURATION_MIN                          0         // (sec) Min heater "on time" duration
-
-  #define OFF_TIME_DEFAULT_SEC                  3         // (sec) Default off time between heater cycles
 
 
 /*=========================================================================*/
 // == Declare Global Variables == //
 /*=========================================================================*/
-  
-  // Define constants and variables for time-related actions and assign them values
-  int onDurationSec = DURATION_DEFAULT_SEC;                     // Variable value for time period, in seconds, between the HE on state and the HE off state, set to a value of 10 for this version of the personal tuning strategy
-  int offDurationSec = OFF_TIME_DEFAULT_SEC;                     // Variable value for time period, in seconds, which suspends the program after the HE has been turned off for increased energy efficiency, set to a value of 1 for this version of the personal tuning strategy
-    
-  // Define constants and variables for voltage management and assign them values
-  float pwmDutyCyclePercent = PWM_DEFAULT_PERCENT; // Variable value for pulse width modulation (PWM) duty cycle for root mean square (RMS) voltage value when the HE is on, set to zero as its initial value
-
-  int heaterCycle = 1;                        //variable to keep remember which of the heaters is running in the cycle  
-  uint32_t timestamp = 0;                     //keeps the start time of heating cycles
-  
-  //char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
   extern uint8_t packetbuffer[];          // the packet buffer for Bluetooth communication
 
   // Controls Verbose "Print" Output to Serial Terminal
@@ -153,13 +118,28 @@
   
   bool ledState = true;           // var to toggle onboard LED state
 
+  enum Scenes 
+  {
+    OFF = -1,     // Sytem off, standby
+    
+    CAMPFIRE,     // Orange, Red, & Yellow; Crackling fire
+    SEASHORE,     // Blue, Green, & White; Ocean waves
+    JUNGLE,       // Green, Yellow, White; Tropical Rainforest
+    
+    NUM_SCENES    // Keep in LAST place - translates to the number of scenes in the list
+  } scene;
+ 
+  //Scenes scene = OFF;  // Use declared enum class to create Global Var to store scene. Initialize to OFF
+
+  float fanPwmPct;     // Percent Duty Cycle of PWM signal, translates to blower fan speed
+  float mistPwmPct;    // Percent Duty Cycle of PWM signal, translates to mister intensity
+
 /*=========================================================================*/
 // == Global Objects == //
 /*=========================================================================*/
  
-  RTC_PCF8523 rtc;              // real time clock object
-  File dataFile;                // SD Card File Object 
-  DHT dht(PIN_DHT, DHTTYPE);    // DHT11 Temperature and Humidity Sensor Object
+  //File dataFile;                // SD Card File Object 
+  //DHT dht(PIN_DHT, DHTTYPE);    // DHT11 Temperature and Humidity Sensor Object
 
   // Create the bluefruit object, either software serial...uncomment these lines
   /*
@@ -185,46 +165,6 @@
 // == Functions == //
 /*=========================================================================*/
 
-  double Fahrenheit(double celsius)       // Not used
-  //Celsius to Fahrenheit conversion
-  {
-      return 1.8 * celsius + 32;
-  }
-
-  float getThermistorTemperatureF(int pin, int numSamples)
-  // Take a series of analog Thermistor readings from pin
-  // Average the samples and convert the value to Temperature in F
-  // Based on code from https://learn.adafruit.com/thermistor?view=all#converting-to-temperature-3-13
-  {
-      int samples[numSamples];                    //int array for holding TS samples
-      float avg = 0.00;
-  
-      for (int i=0; i < numSamples; i++)          // take N samples in a row
-      {
-          samples[i] = analogRead(pin);           // read pin value
-          avg += samples[i];                      // add to avg summing       
-          delay(10);                              // small delay between sensor readings
-      }
-      avg /= numSamples;                      // average out sum of sample readings
-      
-      // convert the value to resistance
-      avg = 1023 / avg - 1;
-      avg = TS_SERIES_RESISTOR / avg;
-  
-      // convert to temperature
-      float steinhart;
-      steinhart = avg / TS_NOMINAL_RESISTANCE;        // (R/Ro)
-      steinhart = log(steinhart);                     // ln(R/Ro)
-      steinhart /= TS_BETA_COEFFICIENT;               // 1/B * ln(R/Ro)
-      steinhart += 1.0 / (TS_NOMINAL_TEMP + 273.15);  // + (1/To)
-      steinhart = 1.0 / steinhart;                    // Invert
-      steinhart -= 273.15;                            // convert to C from Kelvin
-      steinhart = 1.8 * steinhart + 32;               // convert to F
-  
-      return steinhart;
-      
-  } // END getThermistorTemperatureF()
-
   // A small helper function for Bluetooth
   void error(const __FlashStringHelper*err) {
     Serial.println(err);
@@ -248,24 +188,20 @@
     //while(!Serial);     // used for testing only, remove for production code
     
     Wire.begin();
-    dht.begin();
+    //dht.begin();
     Serial.begin(SERIAL_BAUD_RATE);               // Sets the mode of communication between the CPU and the computer or other device to the serial value     
     delay(500);                                   // Short delay to allow Serial Port to open
+
+    scene = OFF;                                  // initialize scene
     
     // ------------------------------- //
     // -- Setup I/O Pins -- //
     // ------------------------------- //
-    pinMode(PIN_AHE, OUTPUT);                    // Sets the PIN_AHE CPU pin to handle outgoing communications
-    pinMode(PIN_BHE, OUTPUT);                    // Sets the PIN_BHE CPU pin to handle outgoing communications
-    pinMode(PIN_CHE, OUTPUT);                    // Sets the PIN_CHE CPU pin to handle outgoing communications
-
-    pinMode(PIN_ATS, INPUT);
-    pinMode(PIN_BTS, INPUT);
-    pinMode(PIN_CTS, INPUT);
-    pinMode(PIN_DHT, INPUT);
-
     pinMode(PIN_CS, OUTPUT);                    // Chip Select pin for the SD card
     pinMode(PIN_ONBOARD_LED, OUTPUT);           // Onboard indicator LED
+
+    pinMode(PIN_FAN, OUTPUT);                   // 
+    pinMode(PIN_MIST, OUTPUT);                  // 
 
     // Configure the reference voltage used for analog input (the value used as the top of the input range) 
     //so the voltage applied to pin AREF (5V) is used as top of analog read range
@@ -274,34 +210,16 @@
     analogReference(AR_EXTERNAL);   // Command used for SAMD-based boards (e.g. Feather M0)    
     
     // ------------------------------- //
-    // -- Initialize Heating Elements to OFF -- //
-    // ------------------------------- //   
-    analogWrite(PIN_AHE, 0);  // PWM = 0, off
-    analogWrite(PIN_BHE, 0);  // PWM = 0, off        
-    analogWrite(PIN_CHE, 0);  // PWM = 0, off
-     
+    // -- Initialize Devices -- //
     // ------------------------------- //
-    // -- Setup RTC -- //
-    // ------------------------------- //
-    if (!rtc.begin()) 
-    {
-      Serial.println("Couldn't find RTC");
-      //while (1);
-    }
-  
-    if (!rtc.initialized()) 
-    {
-      Serial.println("RTC is NOT running!");
-      // the following line sets the RTC to the date & time this sketch was compiled
-      rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-      
-      // This line sets the RTC with an explicit date & time, for example to set
-      // January 21, 2014 at 3am you would call:
-      // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-    }    
-    // ------- END RTC Setup
+    fanPwmPct   = 0.0;    // Percent Duty Cycle of PWM signal, translates to blower fan speed
+    mistPwmPct  = 0.0;    // Percent Duty Cycle of PWM signal, translates to mister intensity
+    
+    analogWrite(PIN_FAN, fanPwmPct*255);      // PWM = 0, initialize Fan off
+    analogWrite(PIN_MIST, mistPwmPct*255);    // PWM = 0, initialize Mister off
 
 
+    /*
     // ------------------------------- //
     // -- Setup SD Card -- //
     // ------------------------------- //
@@ -335,6 +253,7 @@
 
     }
     // ------- END SD Card Setup
+    */
     
     // ------------------------------- //
     // -- Setup BLE module -- //
@@ -467,41 +386,6 @@
     //ble.setMode(BLUEFRUIT_MODE_COMMAND); 
 
     // ------- END BLE MODULE Setup
-
-    // ------------------------------- //
-    // -- Build Data Log Header String -- //
-    // ------------------------------- //
-
-    String headerString = "";
-    
-    headerString += "Firmware:\t";
-    headerString += FIRMWARE_NAME;
-    headerString += " ";
-    headerString += FIRMWARE_VERSION;
-    headerString += "\n\r";
-    
-    headerString += "BLE Dev ID:\t";
-    headerString += BLE_DEV_NAME_PREFIX;
-    headerString += uidString;
-    headerString += "\n\r\n\r";
-
-    headerString += "Timestamp, ";
-    headerString += "Ambient Temp (degF), ";
-    headerString += "Ambient Humid (%), ";
-    headerString += "HE-A Temp (degF), ";
-    headerString += "HE-B Temp (degF), ";
-    headerString += "HE-C Temp (degF), ";
-    headerString += "HE-A Temp (degF), ";
-    headerString += "Power (0.00-1.00), ";
-    headerString += "Duration (sec)";
-    headerString += "\n\r\n\r";
-
-    Serial.print(headerString);     // print header to Serial Mon
-    
-    dataFile.print(headerString);   // print header to data log file
-    dataFile.flush();               // save data log file
-
-    // ------- END Build Data Log Header String
     
   } // END SETUP
 
@@ -516,6 +400,7 @@
     // ------------------------------- //
     // -- Handle Incoming Bluetooth Control Pad Packets -- //
     // ------------------------------- //
+    
     uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
 
     // Bluefruit Control Pad Module Buttons
@@ -526,78 +411,122 @@
       uint8_t buttnum = packetbuffer[2] - '0';
       boolean pressed = packetbuffer[3] - '0';
 
-      if((buttnum == 5) && (pressed == 1))   //When 'UP' button is pressed
-      {
-        pwmDutyCyclePercent += PWM_INCREMENT;
-        if(pwmDutyCyclePercent > PWM_MAX){pwmDutyCyclePercent = PWM_MAX;} //duty cycle cannot be more than PWM_MAX
-
-        //Toggle Blink Indicator LED
-        digitalWrite(PIN_ONBOARD_LED, !ledState);
-        delay(50);
-        digitalWrite(PIN_ONBOARD_LED, ledState);
-
-        //Serial.print ("Button ");
-        //Serial.print(buttnum);
-        //Serial.print (" pressed, ");
-        //Serial.print("Duty Cyle: ");
-        //Serial.println(pwmDutyCyclePercent);
-        
-      } // END "Up" Button
+      // -- SCENE CONTROL 1, 2, 3, 4 -- //
       
-      if((buttnum == 6) && (pressed == 1))   //When 'DOWN' button is pressed
-      {
-        pwmDutyCyclePercent -= PWM_INCREMENT;
-        if(pwmDutyCyclePercent < PWM_MIN){pwmDutyCyclePercent = PWM_MIN;} //duty cycle cannot be less than PWM_MIN
-        
-        //Toggle Blink Indicator LED
-        digitalWrite(PIN_ONBOARD_LED, !ledState);
-        delay(50);
-        digitalWrite(PIN_ONBOARD_LED, ledState);
+        if((buttnum == 1) && (pressed == 1))   //When '1' button is pressed
+        {
 
-        //Serial.print ("Button ");
-        //Serial.print(buttnum);
-        //Serial.print (" pressed, ");
-        //Serial.print("Duty Cyle: ");
-        //Serial.println(pwmDutyCyclePercent);
-        
-      } // END "Down" Button
+          //Toggle Blink Indicator LED
+          digitalWrite(PIN_ONBOARD_LED, !ledState);
+          delay(50);
+          digitalWrite(PIN_ONBOARD_LED, ledState);
 
-      if((buttnum == 7) && (pressed == 1))   //When 'LEFT' button is pressed
-      {
-        onDurationSec -= DURATION_INCREMENT;
-        if(onDurationSec < DURATION_MIN){onDurationSec = DURATION_MIN;} //on duration cannot be less than DURATION_MIN
-        
-        //Toggle Blink Indicator LED
-        digitalWrite(PIN_ONBOARD_LED, !ledState);
-        delay(50);
-        digitalWrite(PIN_ONBOARD_LED, ledState);
-        
-        //Serial.print ("Button ");
-        //Serial.print(buttnum);
-        //Serial.print (" pressed, ");
-        //Serial.print("Duration: ");
-        //Serial.println(onDurationSec);
-        
-      }  // END "Left" Button
+          if(scene == CAMPFIRE)
+          {
+            scene = OFF;        // toggle scene on/off
+            fanPwmPct = 0.0;
+            mistPwmPct = 0.0;
+          }
+          else
+          {
+            scene = CAMPFIRE;
+            fanPwmPct = 0.50;
+            mistPwmPct = 1.00;
+          }
+  
+          Serial.print ("Button ");
+          Serial.print(buttnum);
+          Serial.print (" pressed, ");
+          Serial.print("Scene: ");
+          Serial.println(scene);
+          
+        } // END '1' Button
+
+      // -- END SCENE CONTROL 1, 2, 3, 4 -- //
+
       
-      if((buttnum == 8) && (pressed == 1))   //When 'RIGHT' button is pressed
-      {
-        onDurationSec += DURATION_INCREMENT;
-        if(onDurationSec > DURATION_MAX){onDurationSec = DURATION_MAX;} // on duration cannot be more than DURATION_MAX
-
-        //Toggle Blink Indicator LED
-        digitalWrite(PIN_ONBOARD_LED, !ledState);
-        delay(50);
-        digitalWrite(PIN_ONBOARD_LED, ledState);
-        
-        //Serial.print ("Button ");
-        //Serial.print(buttnum);
-        //Serial.print (" pressed, ");
-        //Serial.print("Duration: ");
-        //Serial.println(onDurationSec);
-        
-      } // END "Right" Button
       
+      // -- FAN CONTROL ^ v -- //
+      
+        if((buttnum == 5) && (pressed == 1))   //When 'UP' button is pressed
+        {
+          fanPwmPct += PWM_INCREMENT;
+          if(fanPwmPct > PWM_MAX){fanPwmPct = PWM_MAX;} //duty cycle selection cannot be allowed to increment beyond boundaries
+  
+          //Toggle Blink Indicator LED
+          digitalWrite(PIN_ONBOARD_LED, !ledState);
+          delay(50);
+          digitalWrite(PIN_ONBOARD_LED, ledState);
+  
+          //Serial.print ("Button ");
+          //Serial.print(buttnum);
+          //Serial.print (" pressed, ");
+          //Serial.print("Duty Cyle: ");
+          //Serial.println(pwmDutyCyclePercent);
+          
+        } // END "Up" Button
+        
+        if((buttnum == 6) && (pressed == 1))   //When 'DOWN' button is pressed
+        {
+          fanPwmPct -= PWM_INCREMENT;
+          if(fanPwmPct < PWM_MIN){fanPwmPct = PWM_MIN;} //duty cycle selection cannot be allowed to increment beyond boundaries
+          
+          //Toggle Blink Indicator LED
+          digitalWrite(PIN_ONBOARD_LED, !ledState);
+          delay(50);
+          digitalWrite(PIN_ONBOARD_LED, ledState);
+  
+          //Serial.print ("Button ");
+          //Serial.print(buttnum);
+          //Serial.print (" pressed, ");
+          //Serial.print("Duty Cyle: ");
+          //Serial.println(pwmDutyCyclePercent);
+          
+        } // END "Down" Button
+
+      // -- END FAN CONTROL ^ v -- //
+
+
+      // -- MIST CONTROL -- < > //
+      
+        if((buttnum == 8) && (pressed == 1))   //When 'RIGHT' button is pressed
+        {
+          mistPwmPct += PWM_INCREMENT;
+          if(mistPwmPct > PWM_MAX){mistPwmPct = PWM_MAX;} // on duration cannot be more than DURATION_MAX
+  
+          //Toggle Blink Indicator LED
+          digitalWrite(PIN_ONBOARD_LED, !ledState);
+          delay(50);
+          digitalWrite(PIN_ONBOARD_LED, ledState);
+          
+          //Serial.print ("Button ");
+          //Serial.print(buttnum);
+          //Serial.print (" pressed, ");
+          //Serial.print("Duration: ");
+          //Serial.println(onDurationSec);
+          
+        } // END "Right" Button
+        
+        if((buttnum == 7) && (pressed == 1))   //When 'LEFT' button is pressed
+        {
+          mistPwmPct -= PWM_INCREMENT;
+          if(mistPwmPct < PWM_MIN){mistPwmPct = PWM_MIN;} //on duration cannot be less than DURATION_MIN
+          
+          //Toggle Blink Indicator LED
+          digitalWrite(PIN_ONBOARD_LED, !ledState);
+          delay(50);
+          digitalWrite(PIN_ONBOARD_LED, ledState);
+          
+          //Serial.print ("Button ");
+          //Serial.print(buttnum);
+          //Serial.print (" pressed, ");
+          //Serial.print("Duration: ");
+          //Serial.println(onDurationSec);
+          
+        }  // END "Left" Button
+      
+      // -- END MIST CONTROL < > -- //
+         
 
       // Update Control Pad Display
       // Whever a BLE Control Pad button is pressed, print updated values to the Control Pad UART display
@@ -607,26 +536,24 @@
         ble.println();  // Clear the previous 2 lines from the screen
         ble.println();  // Clear the previous 2 lines from the screen
         
-        ble.print("Power: \t\t");
-        ble.print(int(pwmDutyCyclePercent*100));
-        ble.print(" %");
+        ble.print("Scene : ");
+        ble.print(scene);
 
         ble.println();
+        
+        ble.print("Fan : ");
+        ble.print(int(fanPwmPct*100));
+        ble.print(" %\t\t");
 
-        ble.print("Duration: \t");
-        ble.print(onDurationSec);
-        ble.print(" s");
+        ble.print("Mist: ");
+        ble.print(int(mistPwmPct*100));
+        ble.print(" %");
         
       } // End Update Control Pad Display UART
     
     } // END Button press 'B' packet handling
-    
-    // ------------------------------- //
-    // -- Get RTC Time -- //
-    // ------------------------------- //  
-    DateTime now = rtc.now();   // save current timestamp to var "now"
 
-
+    /*
     // ------------------------------- //
     // -- Get DHT11 Temp & Humidity Readings -- //
     // ------------------------------- //
@@ -635,171 +562,44 @@
     float dhtTempF = dht.readTemperature(true);                       // Read temperature as Fahrenheit (isFahrenheit = true)
     float dhtHum = dht.readHumidity();                                // Read Humidity %
     float dhtHeatIndexF = dht.computeHeatIndex(dhtTempF, dhtHum);     // Compute heat index in Fahrenheit (the default)
-
-
-    // ------------------------------- //
-    // -- Get Thermistor Temperature Readings -- //
-    // ------------------------------- //    
-    float atsTempF = getThermistorTemperatureF(PIN_ATS, TS_NUM_SAMPLES);      
-    float btsTempF = getThermistorTemperatureF(PIN_BTS, TS_NUM_SAMPLES);
-    float ctsTempF = getThermistorTemperatureF(PIN_CTS, TS_NUM_SAMPLES);
-
+    */
 
     // ------------------------------- //
-    // -- Power Heating Elements -- //
-    // ------------------------------- //
+    // -- Run Scene Operations -- //
+    // ------------------------------- //   
 
-    // No longer needed. Duty Cycle controlled by Control Pad
-    //pwmDutyCyclePercent = pow((voltsRmsTarget/vcc), 2);      // Creates percentage value for duty cycle 
-  
-    //replaced delay()s with timers to allow other parts of the code to run outside of the heater cycle
-    switch (heaterCycle) 
+    switch (scene) 
     {
-      case 1: //AHE ON
-        analogWrite(PIN_AHE, uint8_t(pwmDutyCyclePercent*255));  // Turn on heater at PWM duty cycle rate
-        if( ((millis() - timestamp) >= (onDurationSec * 1000) )) // when duration is expired...
-        {
-          heaterCycle = 2;                                       // go to next cycle state
-          timestamp = millis();
-        }
+      case OFF:
+        // This prevents interface from adjusting fan & mist settings in OFF mode
+        fanPwmPct = 0.0;
+        mistPwmPct = 0.0;
+        
+        analogWrite(PIN_FAN, uint8_t(fanPwmPct*255));
+        analogWrite(PIN_MIST, uint8_t(mistPwmPct*255));
+
         break;
         
-      case 2: //AHE OFF
-        analogWrite(PIN_AHE, 0);                                  // Turn Heater Off
-        if( ((millis() - timestamp) >= (offDurationSec * 1000) )) // when duration is expired...
-        {
-          //heaterCycle = 1;                                      // test code to stay on heater A
-          heaterCycle = 3;                                       // go to next cycle state                                        
-          timestamp = millis();
-        }
+      case CAMPFIRE:
+        analogWrite(PIN_FAN, uint8_t(fanPwmPct*255));
+        analogWrite(PIN_MIST, uint8_t(mistPwmPct*255));
+
         break;
         
-      case 3: //BHE ON
-        analogWrite(PIN_BHE, uint8_t(pwmDutyCyclePercent*255));  // Turn on heater at PWM duty cycle rate
-        if( ((millis() - timestamp) >= (onDurationSec * 1000) )) // when duration is expired...
-        {
-          heaterCycle = 4;                                       // go to next cycle state
-          timestamp = millis();
-        }
+      case SEASHORE:
+
         break;
         
-      case 4: //BHE OFF
-        analogWrite(PIN_BHE, 0);                                  // Turn Heater Off
-        if( ((millis() - timestamp) >= (offDurationSec * 1000) )) // when duration is expired...
-        {
-          heaterCycle = 5;                                       // go to next cycle state
-          timestamp = millis();
-        }
+      case JUNGLE:
+
         break;
-        
-      case 5: //CHE ON
-        analogWrite(PIN_CHE, uint8_t(pwmDutyCyclePercent*255));  // Turn on heater at PWM duty cycle rate
-        if( ((millis() - timestamp) >= (onDurationSec * 1000) )) // when duration is expired...
-        {
-          heaterCycle = 6;                                       // go to next cycle state
-          timestamp = millis();
-        }
-        break;
-        
-      case 6: //CHE OFF
-        analogWrite(PIN_CHE, 0);                                  // Turn Heater Off
-        if( ((millis() - timestamp) >= (offDurationSec * 1000) )) // when duration is expired...
-        {
-          heaterCycle = 1;                                       // go to begining cycle state
-          timestamp = millis();
-        }
-        break;
-        
+             
       default:
         // add default case here (optional)
         break;
     }
 
-   /* //OLD delay-based Heater Code
-    // Operate Heating Element A                    
-    analogWrite(PIN_AHE, uint8_t(pwmDutyCyclePercent*255));         // Set PWM rate based on PWM Duty Cycle Percent
-    delay (onDurationSec * 1000);                            // Leave Heater ON for duration
-    analogWrite(PIN_AHE, 0);                                 // Turn Heater Off
-    delay(offDurationSec * 1000);                            // Leave Heater OFF for duration
-    
-    // Operate Heating Element B                    
-    analogWrite(PIN_BHE, uint8_t(pwmDutyCyclePercent*255));         // Set PWM rate based on PWM Duty Cycle Percent
-    delay (onDurationSec * 1000);                            // Leave Heater ON for duration
-    analogWrite(PIN_BHE, 0);                                 // Turn Heater Off
-    delay(offDurationSec * 1000);                            // Leave Heater OFF for duration
-
-    // Operate Heating Element C                      
-    analogWrite(PIN_CHE, uint8_t(pwmDutyCyclePercent*255));         // Set PWM rate based on PWM Duty Cycle Percent
-    delay (onDurationSec * 1000);                            // Leave Heater ON for duration
-    analogWrite(PIN_CHE, 0);                                 // Turn Heater Off
-    delay(offDurationSec * 1000);                            // Leave Heater OFF for duration
-    */
-           
-
-    // ------------------------------- //
-    // -- Build Output String -- //
-    // ------------------------------- //
-    // Output string will be used as row in data log
-    
-    String outputString = "";      // Clear / Initialize outputString
-   
-    // Timestamp String
-    outputString +=  (now.year());
-    outputString += ('/');
-     
-    if (now.month() < 10) {outputString += (0);}    // Add a zero pad if less than 10
-    outputString += (now.month());
-    outputString += ('/');
-    
-    if (now.day() < 10) {outputString +=  (0);}    // Add a zero pad if less than 10
-    outputString += (now.day());
-    outputString += (' ');
-
-    if (now.hour() < 10) {outputString +=  (0);}    // Add a zero pad if less than 10
-    outputString +=  (now.hour());
-    outputString += (":");
-    
-    if (now.minute() < 10) {outputString += (0);}    // Add a zero pad if less than 10
-    outputString += (now.minute());
-    outputString += (":");
-    
-    if (now.second() < 10) {outputString += (0);}    // Add a zero pad if less than 10
-    outputString += (now.second());
-
-    outputString +=  ", ";
-
-    // DHT String
-    outputString += String(dhtTempF,2);  //use 2 decimal places
-    outputString += ", ";
-    outputString += String(dhtHum,2);    //use 2 decimal places
-    outputString += ", ";
-
-    // Thermistor String
-    outputString += String(atsTempF,2);  //use 2 decimal places
-    outputString += ", ";
-    outputString += String(btsTempF,2);  //use 2 decimal places
-    outputString += ", ";
-    outputString += String(ctsTempF,2);  //use 2 decimal places
-    outputString += ", ";
-
-    // Heating Element String
-    outputString += String(pwmDutyCyclePercent,2);    //use 2 decimal places
-    outputString += ", ";
-    outputString += String(onDurationSec);    //use 2 decimal places
-
-    // End with New Line
-    outputString += "\n\r";
  
-    Serial.print(outputString);
-    dataFile.print(outputString);
-
-    // The following line will 'save' the file to the SD card after every
-    // line of data - this will use more power and slow down how much data
-    // you can read but it's safer! 
-    // If you want to speed up the system, remove the call to flush() and it
-    // will save the file only every 512 bytes - every time a sector on the 
-    // SD card is filled with data.  
-    dataFile.flush();
         
   } // END LOOP
 
