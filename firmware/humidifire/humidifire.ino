@@ -4,12 +4,7 @@
 
  * TODO:
  * ----------
- * - add r89m Buttons library
- *    - add "click encoder button" to increment / toggle mode (BLE not required anymore)
- *    
- * - add modeToString() function to print mode names
- * 
- * - add 'released' button variables to BLE App button function 
+ * - add EEPROM ability to store array settings[mode][fanPwm, mistPwm]
  * 
  * - make rotary encoder fan speed control more fluid / intuitive
  *    - percieved fan speed is not linaerly proportional to PWM duty cycle
@@ -18,6 +13,14 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/13/2019
+ * - collected and syncronized display updates of BLE & Serial Montior for settings changes at the end of loop() with settingsUpdate flag
+ * - added modeToString() function to print mode names
+ * - added EasyButton library and functionality
+ *  - onPressed
+ *  - onPressedFor (held for 1 sec)
+ *  - onSequence (2 clicks in 1 sec)
+ * 
  * 11/10/2019
  * - Rotary Encoder fan speed control
  * - Bluefruit Connect App fan, mist, and mode control
@@ -53,8 +56,8 @@
   #include "BluefruitConfig.h"
   //#include "BluefruitSetup.ino"
   
-  #include <Encoder.h>      // http://www.pjrc.com/teensy/td_libs_Encoder.html     
-  
+  #include <Encoder.h>                  // http://www.pjrc.com/teensy/td_libs_Encoder.html
+  #include <EasyButton.h>               // https://github.com/evert-arias/EasyButton
   
   //#include <SD.h>         //included in Arduino IDE core
   
@@ -125,8 +128,8 @@
   #define PIN_MIST                              6   // output - PWM control MOSFET to Mister / Bubbler
 
   #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board (uses interrupt)
-  #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board  (uses interrupt)
-  #define PIN_ENCODER_SW                        A0  // Labeled "SW" pin on Encoder board
+  #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board (uses interrupt)
+  #define PIN_ENCODER_SW                        A0  // Labeled "SW" pin on Encoder board (uses interrupt)
 
   
   // Bluefruit Connect App Buttons
@@ -162,6 +165,12 @@
   #define PWM_MAX                               255      // (0 - 255) Max PWM duty cycle allowed in software
   #define PWM_MIN                               0        // (0 - 255) Min PWM duty cycle allowed in software
 
+  // EasyButton Settings
+  //-------------
+  #define BTN_HOLD_DURATION_MS                  2000    // duration for onPressedFor                 
+  #define BTN_SEQ_NUM_CLICKS                    2       // number of clicks for onSequence
+  #define BTN_SEQ_TIMEOUT_MS                    (BTN_SEQ_NUM_CLICKS*200)    // timeout window for onSequence
+
 
 /*=========================================================================*/
 // == Declare Global Variables == //
@@ -170,8 +179,7 @@
   
   bool ledState = true;           // var to toggle onboard LED state
 
-  //enum Scenes
-  enum Modes
+  enum Mode
   {
     OFF = -1,     // Sytem off, standby
     
@@ -180,19 +188,18 @@
     TROPICS,       // Green, Yellow, White; Tropical Rainforest
     
     NUM_MODES    // Keep in LAST place - translates to the number of modes in the list (1-indexed)
-    //NUM_SCENES    // Keep in LAST place - translates to the number of scenes in the list
     
   }; // END enum Modes
-  //} scene;
- 
-  //Scenes scene;  // declare enum object
-  Modes mode;      // declare enum object
+  
+  // update modeToString() when adding a new Mode
 
-  //float fanPwmPct;     // Percent Duty Cycle of PWM signal, translates to blower fan speed
-  //float mistPwmPct;    // Percent Duty Cycle of PWM signal, translates to mister intensity
+  Mode currentMode;      // declare enum object
+  Mode previousMode;
 
   byte fanPwm;         // PWM Duty Cycle 0 - 255
   byte mistPwm;        // PWM Duty Cycle 0 - 255
+
+  bool settingsUpdate;      // flag that settings have been changed by BLE or button control 
 
   //long previousEncoderPos;
   //long currentEncoderPos;
@@ -210,6 +217,8 @@
   //   Low Performance:  neither pin has interrupt capability
   //   avoid using pins with LEDs attached
   Encoder rotaryEncoder(PIN_ENCODER_B, PIN_ENCODER_A);
+
+  EasyButton button(PIN_ENCODER_SW);
 
 
   // Create the bluefruit object, either software serial...uncomment these lines
@@ -238,7 +247,7 @@
 
   // A small helper function for Bluetooth
   void error(const __FlashStringHelper*err) {
-    Serial.println(err);
+    if(Serial){Serial.println(err);}
     while (1);
   }
   
@@ -247,9 +256,71 @@
   float parsefloat(uint8_t *buffer);
   void printHex(const uint8_t * data, const uint32_t numBytes);
 
-  // function prototypes in BluefruitSetup.h
-  //void bluefruitSetup();
 
+  // function to print Mode enum as a string
+  String modeToString(enum Mode m)
+  {
+    String modeString[] = 
+    {
+        "OFF",      // = -1
+        
+        "CAMPFIRE",
+        "SEASHORE",
+        "TROPICS",
+        
+        "NUM_MODES" // Keep LAST
+     };
+
+    return modeString[m+1]; // enum Mode starts at -1
+  }
+
+  // EasyButton Callback Functions
+  // -------------------
+    void buttonISR()      // Interrupt driven button response, redirects to callback functions below
+  {
+    //When button is being used through external interrupts, parameter INTERRUPT must be passed to read() function
+    button.read(INTERRUPT);
+  }
+  
+  void onPressed_cb()
+  {
+    settingsUpdate = true;      //handle in Update Displays
+    
+    //if(currentMode < NUM_MODES)  // if not at the last mode, increment to the next mode
+    if(currentMode < CAMPFIRE)     // temporary limit to toggle between CAMPFIRE and OFF
+    {
+      currentMode = Mode(currentMode+1); // cast int value to Modes enum
+    }
+    else                  // else, reset to OFF
+    {
+      currentMode = OFF;
+    }
+
+    if(Serial)
+    {
+      //Serial.println("onPressed_cb()");
+    }
+    
+  } // END onPressed_cb()
+
+  void onPressedFor_cb()
+  {
+    if(Serial)
+    {
+      Serial.println("onPressedFor_cb())");
+    }
+    
+  } // END onPressedFor_cb()
+  
+  void onSequence_cb()
+  {
+    if(Serial)
+    {
+      Serial.println("onSequence_cb()");
+    }
+    
+  } // END onSequence_cb()
+  
 
 //=========================================================================//
 // == Setup == //
@@ -257,14 +328,22 @@
 
   void setup()
   {
-    // Only used to ensure app does not start printing to Serial Mon until a connection to the IDE is present
-    // This will "hang" code when not connected to a PC
-    //while(!Serial);     // used for testing only, remove for production code
     
     Wire.begin();
     //dht.begin();
     Serial.begin(SERIAL_BAUD_RATE);               // Sets the mode of communication between the CPU and the computer or other device to the serial value     
     delay(500);                                   // Short delay to allow Serial Port to open
+
+    // EasyButton Setup
+    button.begin();
+    button.onPressed(onPressed_cb);                                        // single press (callback function)
+    button.onPressedFor(BTN_HOLD_DURATION_MS, onPressedFor_cb);            // pressed and held for BTN_DURATION_MS (callback function)
+    button.onSequence(BTN_SEQ_NUM_CLICKS, BTN_SEQ_TIMEOUT_MS, onSequence_cb);  // button pressed BTN_SEQ_NUM_CLICKS times within BTN_SEQ_TIMEOUT_MS (callback function)
+    
+    if (button.supportsInterrupt())                                       //
+    {
+      button.enableInterrupt(buttonISR);
+    }
     
     // ------------------------------- //
     // -- Setup I/O Pins -- //
@@ -275,7 +354,9 @@
     pinMode(PIN_FAN, OUTPUT);                   // 
     pinMode(PIN_MIST, OUTPUT);                  // 
 
-    pinMode(PIN_ENCODER_SW, INPUT_PULLUP);      //
+    //pinMode(PIN_ENCODER_SW, INPUT_PULLUP);      // pin setup through EasyButton object
+
+
 
     // Configure the reference voltage used for analog input (the value used as the top of the input range) 
     //so the voltage applied to pin AREF (5V) is used as top of analog read range
@@ -288,19 +369,16 @@
     // ------------------------------- //
     
     // Initialize devices
-    //fanPwmPct   = 0.0;    // Percent Duty Cycle of PWM signal, translates to blower fan speed
-    //mistPwmPct  = 0.0;    // Percent Duty Cycle of PWM signal, translates to mister intensity    
-    //analogWrite(PIN_FAN, fanPwmPct*255);      // PWM = 0, initialize Fan off
-    //analogWrite(PIN_MIST, mistPwmPct*255);    // PWM = 0, initialize Mister off
+    settingsUpdate = false;
 
     fanPwm   = 0;                       // Duty Cycle of PWM signal, translates to blower fan speed
     mistPwm  = 0;                       // Duty Cycle of PWM signal, translates to mister intensity
     analogWrite(PIN_FAN, fanPwm);      // PWM = 0, initialize Fan off
     analogWrite(PIN_MIST, mistPwm);    // PWM = 0, initialize Mister off
 
-    //scene = OFF;                                  // initialize scene
-    //mode = CAMPFIRE;                                  // initialize mode to CAMPFIRE
-    mode = OFF;                                  // initialize mode to OFF
+    //currentMode = CAMPFIRE;                                  // initialize mode to CAMPFIRE
+    currentMode = OFF;                                  // initialize mode to OFF
+    previousMode = currentMode;                     // initialize state of previousMode to currentMode
     
     // Initialize Encoder
     rotaryEncoder.write(0);                      // Initialize Encoder Accumulator to 0
@@ -357,12 +435,19 @@
   void loop()
   {
     digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
+  
+    button.update();  // EasyButton: update() function must be called repeatedly only if onPressedFor functionality is being used and interrupt is enabled
 
     // ------------------------------- //
     // -- Handle Incoming Bluetooth Control Pad Packets -- //
     // ------------------------------- //
-    
-    uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
+
+    // Check is ble is connected before trying to readPacket
+    // otherwise, readPacket has to wait to timeout every loop before code can proceed
+    if(ble.isConnected())
+    {
+      uint8_t len = readPacket(&ble, BLE_READPACKET_TIMEOUT);
+    }
 
     // Bluefruit Control Pad Module Buttons
     // see https://learn.adafruit.com/bluefruit-le-connect?view=all#control-pad-8-11
@@ -377,46 +462,19 @@
       
         if((buttnum == APP_BTN_1) && (pressed == 1))   //When '1' button is pressed
         {
-
-          //if(scene == CAMPFIRE)
-          if(mode == CAMPFIRE)
+          if(currentMode == CAMPFIRE)
           {
-            //scene = OFF;        // toggle scene on/off
-            //fanPwmPct = 0.0;
-            //mistPwmPct = 0.0;
-
-            mode = OFF;        // toggle mode on/off
-            fanPwm = 0;
-            mistPwm = 0;
+            currentMode = OFF;        // toggle mode on/off
           }
           else
           {
-            //scene = CAMPFIRE;
-            //fanPwmPct = 0.50;
-            //mistPwmPct = 1.00;
-
-            mode = CAMPFIRE;
-            fanPwm = PWM_DEFAULT;
-            mistPwm = PWM_MAX;
+            currentMode = CAMPFIRE;        
           }
-
-          // Toggle Blink Indicator LED
-          digitalWrite(PIN_ONBOARD_LED, !ledState);
-          delay(50);
-          digitalWrite(PIN_ONBOARD_LED, ledState);
-  
-          // Print
-          //Serial.print ("Button ");
-          //Serial.print(buttnum);
-          //Serial.print (" pressed, ");
-          //Serial.print("Scene: ");
-          //Serial.println(scene);
           
         } // END '1' Button
 
       // -- END MODE CONTROL 1, 2, 3, 4 -- //
-
-      
+    
       
       // -- FAN CONTROL ^ v -- //
       
@@ -427,17 +485,6 @@
         
           if((fanPwm + PWM_INCREMENT) >= PWM_MAX){fanPwm = PWM_MAX;} //duty cycle selection cannot be allowed to increment beyond boundaries
           else{fanPwm += PWM_INCREMENT;}
-  
-          //Toggle Blink Indicator LED
-          digitalWrite(PIN_ONBOARD_LED, !ledState);
-          delay(50);
-          digitalWrite(PIN_ONBOARD_LED, ledState);
-  
-          //Serial.print ("Button ");
-          //Serial.print(buttnum);
-          //Serial.print (" pressed, ");
-          //Serial.print("Duty Cyle: ");
-          //Serial.println(pwmDutyCyclePercent);
           
         } // END "Up" Button
         
@@ -448,18 +495,7 @@
           
           if((fanPwm - PWM_INCREMENT) <= PWM_MIN){fanPwm = PWM_MIN;} //duty cycle selection cannot be allowed to increment beyond boundaries
           else{fanPwm -= PWM_INCREMENT;}
-          
-          //Toggle Blink Indicator LED
-          digitalWrite(PIN_ONBOARD_LED, !ledState);
-          delay(50);
-          digitalWrite(PIN_ONBOARD_LED, ledState);
-  
-          //Serial.print ("Button ");
-          //Serial.print(buttnum);
-          //Serial.print (" pressed, ");
-          //Serial.print("Duty Cyle: ");
-          //Serial.println(pwmDutyCyclePercent);
-          
+                    
         } // END "Down" Button
 
       // -- END FAN CONTROL ^ v -- //
@@ -475,17 +511,6 @@
           if((mistPwm + PWM_INCREMENT) >= PWM_MAX){mistPwm = PWM_MAX;} //duty cycle selection cannot be allowed to increment beyond boundaries
           else{mistPwm += PWM_INCREMENT;}
   
-          //Toggle Blink Indicator LED
-          digitalWrite(PIN_ONBOARD_LED, !ledState);
-          delay(50);
-          digitalWrite(PIN_ONBOARD_LED, ledState);
-          
-          //Serial.print ("Button ");
-          //Serial.print(buttnum);
-          //Serial.print (" pressed, ");
-          //Serial.print("Duration: ");
-          //Serial.println(onDurationSec);
-          
         } // END "Right" Button
         
         if((buttnum == APP_BTN_LEFT) && (pressed == 1))   //When 'LEFT' button is pressed
@@ -495,28 +520,25 @@
          
           if((mistPwm - PWM_INCREMENT) <= PWM_MIN){mistPwm = PWM_MIN;} //duty cycle selection cannot be allowed to increment beyond boundaries
           else{mistPwm -= PWM_INCREMENT;}
-          
-          //Toggle Blink Indicator LED
-          digitalWrite(PIN_ONBOARD_LED, !ledState);
-          delay(50);
-          digitalWrite(PIN_ONBOARD_LED, ledState);
-          
-          //Serial.print ("Button ");
-          //Serial.print(buttnum);
-          //Serial.print (" pressed, ");
-          //Serial.print("Duration: ");
-          //Serial.println(onDurationSec);
-          
+                    
         }  // END "Left" Button
       
       // -- END MIST CONTROL < > -- //
          
-
-      // Update Control Pad Display
+      
       // Whever a BLE Control Pad button is pressed, print updated values to the Control Pad UART display
       // Do this at the END of the button update routine
       if(pressed == 1)
       {
+        settingsUpdate = true;      //handle in Update Displays
+        
+        /*
+        //Toggle Blink Indicator LED
+        digitalWrite(PIN_ONBOARD_LED, !ledState);
+        delay(50);
+        digitalWrite(PIN_ONBOARD_LED, ledState);
+        
+        // Update Control Pad Display  
         ble.println();  // Clear the previous 2 lines from the screen
         ble.println();  // Clear the previous 2 lines from the screen
         
@@ -524,7 +546,8 @@
         //ble.print(scene);
 
         ble.print("Mode:\t");
-        ble.print(mode);
+        //ble.print(currentMode);
+        ble.print(modeToString(currentMode));
 
         ble.println();
         
@@ -537,6 +560,7 @@
         //ble.print(int(mistPwmPct*100));
         ble.print(mistPwm);
         ble.print(" ");
+        */
         
       } // End Update Control Pad Display UART
     
@@ -551,13 +575,16 @@
 
     if(encoderDelta != 0)       // encoder has moved
     {
+      settingsUpdate = true;      //handle in Update Displays
+      
       rotaryEncoder.write(0);   //reset encoder accumulator
 
       if(encoderDelta > 0)                                        // encoder moved in POSITIVE direction
       {
         if((fanPwm + encoderDelta) >= PWM_MAX){fanPwm = PWM_MAX;} // do not go above PWM_MAX
         else {fanPwm += encoderDelta;}                            // increase by encoderDelta
-        
+
+        /*
         if(Serial)
         { 
           Serial.print("encoderDelta: ");
@@ -566,6 +593,7 @@
           Serial.println(fanPwm);
           Serial.println();
         }
+        */
       }
       
       if (encoderDelta < 0)                                  // encoder moved in NEGATIVE direction
@@ -573,6 +601,7 @@
         if((fanPwm + encoderDelta) <= PWM_MIN){fanPwm = PWM_MIN;} // do not go below PWM_MIN
         else {fanPwm += encoderDelta;}                            // decrease by encoderDelta (add a negative)
 
+        /*
         if(Serial)
         { 
           Serial.print("encoderDelta: ");
@@ -581,33 +610,32 @@
           Serial.println(fanPwm);
           Serial.println();
         }
+        */
       }
 
+      /*
       // If BLE is connected, update Control Pad Display
       if(ble.isConnected())
       {
         ble.println();  // Clear the previous 2 lines from the screen
         ble.println();  // Clear the previous 2 lines from the screen
-        
-        //ble.print("Scene:\t");
-        //ble.print(scene);
     
         ble.print("Mode:\t");
-        ble.print(mode);
+        //ble.print(currentMode);
+        ble.print(modeToString(currentMode));
     
         ble.println();
         
         ble.print("Fan :\t");
-        //ble.print(int(fanPwmPct*100));
         ble.print(fanPwm);
         ble.print(" \t");
     
         ble.print("Mist:\t");
-        //ble.print(int(mistPwmPct*100));
         ble.print(mistPwm);
         ble.print(" ");
         
       } // END ble.isConnected()
+      */
       
     } // END Encoder has moved
 
@@ -625,51 +653,130 @@
     */
 
     // ------------------------------- //
-    // -- Run Mode Operations -- //
+    // -- Set Mode Characteristics -- //
     // ------------------------------- //   
 
-    //switch (scene) 
-    switch(mode)
+    if(currentMode != previousMode)           // if mode has changed, set mode vars
     {
-      case OFF:
-        // This prevents interface from adjusting fan & mist settings in OFF mode
-        //fanPwmPct = 0.0;
-        //mistPwmPct = 0.0;       
-        //analogWrite(PIN_FAN, uint8_t(fanPwmPct*255));
-        //analogWrite(PIN_MIST, uint8_t(mistPwmPct*255));
-
-        fanPwm = 0;
-        mistPwm = 0;       
-        analogWrite(PIN_FAN, fanPwm);
-        analogWrite(PIN_MIST, mistPwm);
-
-        break;  // END OFF
-        
-      case CAMPFIRE:
-        //analogWrite(PIN_FAN, uint8_t(fanPwmPct*255));
-        //analogWrite(PIN_MIST, uint8_t(mistPwmPct*255));
-        
-        analogWrite(PIN_FAN, fanPwm);
-        analogWrite(PIN_MIST, mistPwm);
-        
-        break;  // END CAMPFIRE
-        
-      case SEASHORE:
-
-        break;  // END SEASHORE
-        
-      case TROPICS:
-
-        break;  // END TROPICS
-             
-      default:
+      previousMode = currentMode;             // reset previousMode
       
-        // add default case here (optional)
+      switch(currentMode)
+      {
+        case OFF:
         
-        break;  // END default
+          fanPwm = 0;
+          mistPwm = 0;
+ 
+          break;  // END OFF
+          
+        case CAMPFIRE:
         
-    } // END switch(mode)
+          fanPwm = PWM_DEFAULT;
+          mistPwm = PWM_MAX;
+                 
+          break;  // END CAMPFIRE
+          
+        case SEASHORE:
+  
+          break;  // END SEASHORE
+          
+        case TROPICS:
+  
+          break;  // END TROPICS
+               
+        default:
+        
+          // add default case here (optional)
+          
+          break;  // END default
+          
+      } // END switch(currentMode)
+      
+      /*
+      if(Serial)
+      {
+        Serial.print("Mode: ");
+        Serial.println(modeToString(currentMode));
+      }
+      */
 
+      
+    } // END if (mode changed)
+
+    
+    // ------------------------------- //
+    // -- Run Mode Operations -- //
+    // ------------------------------- //
+
+    if(currentMode == OFF)          // This prevents settings from being changed when in OFF mode
+    {
+      fanPwm = 0;
+      mistPwm = 0;  
+    }
+
+    analogWrite(PIN_FAN, fanPwm);
+    analogWrite(PIN_MIST, mistPwm);
+
+
+    // ------------------------------- //
+    // -- Update Displays (BLE & Serial -- //
+    // ------------------------------- //
+
+    if(settingsUpdate)
+    {
+        settingsUpdate = false;   // reset flag
+        
+        //Toggle Blink Indicator LED
+        digitalWrite(PIN_ONBOARD_LED, !ledState);
+        delay(50);
+        digitalWrite(PIN_ONBOARD_LED, ledState);
+        
+        // Update Serial Monitor
+        if(Serial)
+        {
+          Serial.println();
+          Serial.println();
+          
+          Serial.print("Mode:\t");
+          Serial.print(modeToString(currentMode));
+  
+          Serial.println();
+          
+          Serial.print("Fan :\t");
+          Serial.print(fanPwm);
+          Serial.print(" \t");
+  
+          Serial.print("Mist:\t");
+          Serial.print(mistPwm);
+          Serial.print(" ");
+          
+        } // END Update Serial Monitor
+
+      
+        // Update BLE Control Pad Display
+        if(ble.isConnected())
+        {                   
+          ble.println();  // Clear the previous 2 lines from the screen
+          ble.println();  // Clear the previous 2 lines from the screen
+          
+          ble.print("Mode:\t");
+          //ble.print(currentMode);
+          ble.print(modeToString(currentMode));
+  
+          ble.println();
+          
+          ble.print("Fan :\t");
+          ble.print(fanPwm);
+          ble.print(" \t");
+  
+          ble.print("Mist:\t");
+          ble.print(mistPwm);
+          ble.print(" ");
+          
+        } // END Update BLE Control Pad Display
+
+      
+    } // END Update Displays
  
         
   } // END LOOP
