@@ -4,6 +4,8 @@
 
  * TODO:
  * ----------
+ * - add NeoPixel scenes
+ * 
  * - add EEPROM ability to store array settings[mode][fanPwm, mistPwm]
  * 
  * - make rotary encoder fan speed control more fluid / intuitive
