@@ -4,8 +4,6 @@
 
  * TODO:
  * ----------
- * - add NeoPixel scenes
- * 
  * - add EEPROM ability to store array settings[mode][fanPwm, mistPwm]
  * 
  * - make rotary encoder fan speed control more fluid / intuitive
@@ -15,6 +13,9 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/15/2019
+ * - added NeoPixel functionality
+ * 
  * 11/13/2019
  * - collected and syncronized display updates of BLE & Serial Montior for settings changes at the end of loop() with settingsUpdate flag
  * - added modeToString() function to print mode names
@@ -60,6 +61,7 @@
   
   #include <Encoder.h>                  // http://www.pjrc.com/teensy/td_libs_Encoder.html
   #include <EasyButton.h>               // https://github.com/evert-arias/EasyButton
+  #include <Adafruit_NeoPixel.h>        // https://github.com/adafruit/Adafruit_NeoPixel
   
   //#include <SD.h>         //included in Arduino IDE core
   
@@ -125,6 +127,8 @@
   
   #define PIN_ONBOARD_LED                       13   // Built-in LED pin
   #define PIN_CS                                10  // output - Chip Select for SD Card
+
+  #define PIN_PIXELS                            12  // NeoPixel strip
   
   #define PIN_FAN                               5   // output - PWM control MOSFET to Blower Fan
   #define PIN_MIST                              6   // output - PWM control MOSFET to Mister / Bubbler
@@ -173,6 +177,10 @@
   #define BTN_SEQ_NUM_CLICKS                    2       // number of clicks for onSequence
   #define BTN_SEQ_TIMEOUT_MS                    (BTN_SEQ_NUM_CLICKS*200)    // timeout window for onSequence
 
+  // NeoPixel Settings
+  //-------------
+  #define NUM_PIXELS                            10      // Total number of Pixels
+
 
 /*=========================================================================*/
 // == Declare Global Variables == //
@@ -213,6 +221,8 @@
   //File dataFile;                // SD Card File Object 
   //DHT dht(PIN_DHT, DHTTYPE);    // DHT11 Temperature and Humidity Sensor Object
 
+  // Rotary Encoder Object
+  //-------------
   // Change these two numbers to the pins connected to your encoder.
   //   Best Performance: both pins have interrupt capability
   //   Good Performance: only the first pin has interrupt capability
@@ -220,9 +230,36 @@
   //   avoid using pins with LEDs attached
   Encoder rotaryEncoder(PIN_ENCODER_B, PIN_ENCODER_A);
 
+  // Push Button Object
+  //-------------
   EasyButton button(PIN_ENCODER_SW);
 
 
+  // NeoPixel Object
+  //-------------
+  Adafruit_NeoPixel pixels(NUM_PIXELS, PIN_PIXELS, NEO_GRB + NEO_KHZ800);
+  // Argument 1 = Number of pixels in NeoPixel strip
+  // Argument 2 = Arduino pin number (most are valid)
+  // Argument 3 = Pixel type flags, add together as needed:
+  //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+  //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+  //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+  //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+  //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
+  
+  // NEOPIXEL BEST PRACTICES for most reliable operation:
+  // - Add 1000 uF CAPACITOR between NeoPixel strip's + and - connections.
+  // - MINIMIZE WIRING LENGTH between microcontroller board and first pixel.
+  // - NeoPixel strip's DATA-IN should pass through a 300-500 OHM RESISTOR.
+  // - AVOID connecting NeoPixels on a LIVE CIRCUIT. If you must, ALWAYS
+  //   connect GROUND (-) first, then +, then data.
+  // - When using a 3.3V microcontroller with a 5V-powered NeoPixel strip,
+  //   a LOGIC-LEVEL CONVERTER on the data line is STRONGLY RECOMMENDED.
+  // (Skipping these may work OK on your workbench but can fail in the field)
+
+
+  // Bluefruit Object
+  //-------------
   // Create the bluefruit object, either software serial...uncomment these lines
   /*
   SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
@@ -336,7 +373,10 @@
     Serial.begin(SERIAL_BAUD_RATE);               // Sets the mode of communication between the CPU and the computer or other device to the serial value     
     delay(500);                                   // Short delay to allow Serial Port to open
 
+    pixels.begin();
+    
     // EasyButton Setup
+    //-------------
     button.begin();
     button.onPressed(onPressed_cb);                                        // single press (callback function)
     button.onPressedFor(BTN_HOLD_DURATION_MS, onPressedFor_cb);            // pressed and held for BTN_DURATION_MS (callback function)
@@ -710,15 +750,26 @@
     // -- Run Mode Operations -- //
     // ------------------------------- //
 
-    if(currentMode == OFF)          // This prevents settings from being changed when in OFF mode
+    if(currentMode != OFF)
     {
-      fanPwm = 0;
-      mistPwm = 0;  
+      flame();
+      analogWrite(PIN_FAN, fanPwm);
+      analogWrite(PIN_MIST, mistPwm);  
     }
+    else
+    {
+      fanPwm = 0;                    // This prevents settings from being changed when in OFF mode
+      mistPwm = 0;
+      analogWrite(PIN_FAN, fanPwm);
+      analogWrite(PIN_MIST, mistPwm);
 
-    analogWrite(PIN_FAN, fanPwm);
-    analogWrite(PIN_MIST, mistPwm);
-
+      for(uint8_t i=0; i < NUM_PIXELS; i++) 
+      {
+        pixels.setPixelColor(i, pixels.Color(0,0,0)); // off
+      }
+      pixels.show();
+      
+    }
 
     // ------------------------------- //
     // -- Update Displays (BLE & Serial -- //
