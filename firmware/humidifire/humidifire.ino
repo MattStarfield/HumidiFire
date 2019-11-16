@@ -13,6 +13,9 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/16/2019
+ * - added I2C expander library for control of SoundFX board
+ * 
  * 11/15/2019
  * - added NeoPixel functionality
  * 
@@ -62,6 +65,8 @@
   #include <Encoder.h>                  // http://www.pjrc.com/teensy/td_libs_Encoder.html
   #include <EasyButton.h>               // https://github.com/evert-arias/EasyButton
   #include <Adafruit_NeoPixel.h>        // https://github.com/adafruit/Adafruit_NeoPixel
+  #include <Adafruit_MCP23008.h>        // I2C Expander IC // https://github.com/adafruit/Adafruit-MCP23008-library
+  
   
   //#include <SD.h>         //included in Arduino IDE core
   
@@ -136,6 +141,17 @@
   #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board (uses interrupt)
   #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board (uses interrupt)
   #define PIN_ENCODER_SW                        A0  // Labeled "SW" pin on Encoder board (uses interrupt)
+
+  // I2C Expander Pin Defines
+  //-------------
+  #define PIN_I2C_FX0                           7   // GP7, Pin 17 on MCP23008
+  #define PIN_I2C_FX1                           6   // GP6, Pin 16 on MCP23008
+  #define PIN_I2C_FX2                           5   // GP5, Pin 15 on MCP23008
+  #define PIN_I2C_FX3                           4   // GP4, Pin 14 on MCP23008
+  #define PIN_I2C_FX4                           3   // GP3, Pin 13 on MCP23008
+  #define PIN_I2C_FX5                           2   // GP2, Pin 12 on MCP23008
+  #define PIN_I2C_FX6                           1   // GP1, Pin 11 on MCP23008
+  #define PIN_I2C_FX7                           0   // GP0, Pin 10 on MCP23008
 
   
   // Bluefruit Connect App Buttons
@@ -233,6 +249,10 @@
   // Push Button Object
   //-------------
   EasyButton button(PIN_ENCODER_SW);
+
+  // I2C Expander Object
+  //-------------
+  Adafruit_MCP23008 i2cExpander;
 
 
   // NeoPixel Object
@@ -374,6 +394,8 @@
     delay(500);                                   // Short delay to allow Serial Port to open
 
     pixels.begin();
+
+    i2cExpander.begin();
     
     // EasyButton Setup
     //-------------
@@ -398,7 +420,15 @@
 
     //pinMode(PIN_ENCODER_SW, INPUT_PULLUP);      // pin setup through EasyButton object
 
-
+    // I2C Expander Pin Setup
+    i2cExpander.pinMode(PIN_I2C_FX0, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX1, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX2, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX3, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX4, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX5, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX6, OUTPUT);
+    i2cExpander.pinMode(PIN_I2C_FX7, OUTPUT);
 
     // Configure the reference voltage used for analog input (the value used as the top of the input range) 
     //so the voltage applied to pin AREF (5V) is used as top of analog read range
@@ -708,6 +738,8 @@
         
           fanPwm = 0;
           mistPwm = 0;
+
+          i2cExpander.digitalWrite(PIN_I2C_FX0, HIGH);
  
           break;  // END OFF
           
@@ -715,6 +747,8 @@
         
           fanPwm = PWM_DEFAULT;
           mistPwm = PWM_MAX;
+
+          i2cExpander.digitalWrite(PIN_I2C_FX0, LOW);
                  
           break;  // END CAMPFIRE
           
@@ -752,7 +786,8 @@
 
     if(currentMode != OFF)
     {
-      flame();
+      flame();      
+      
       analogWrite(PIN_FAN, fanPwm);
       analogWrite(PIN_MIST, mistPwm);  
     }
@@ -760,6 +795,7 @@
     {
       fanPwm = 0;                    // This prevents settings from being changed when in OFF mode
       mistPwm = 0;
+      
       analogWrite(PIN_FAN, fanPwm);
       analogWrite(PIN_MIST, mistPwm);
 
