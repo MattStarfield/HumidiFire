@@ -4,6 +4,7 @@
 
  * TODO:
  * ----------
+ * 
  * - add EEPROM ability to store array settings[mode][fanPwm, mistPwm]
  * 
  * - make rotary encoder fan speed control more fluid / intuitive
@@ -13,6 +14,12 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/20/2019
+ * - Updated NUM_PIXELS to 31
+ * - Moved to Feather 32u4 
+ *     - Feather M0 has NO EEPROM memory!!
+ *     - Feather M0 isn't compatible with <Adafruit_MCP23008.h> I2C Expander library
+ * 
  * 11/16/2019
  * - added I2C expander library for control of SoundFX board
  * 
@@ -138,9 +145,9 @@
   #define PIN_FAN                               5   // output - PWM control MOSFET to Blower Fan
   #define PIN_MIST                              6   // output - PWM control MOSFET to Mister / Bubbler
 
-  #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board (uses interrupt)
-  #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board (uses interrupt)
-  #define PIN_ENCODER_SW                        A0  // Labeled "SW" pin on Encoder board (uses interrupt)
+  #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board 
+  #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board
+  #define PIN_ENCODER_SW                        0   // Labeled "SW" pin on Encoder board (uses interrupt)
 
   // I2C Expander Pin Defines
   //-------------
@@ -152,6 +159,9 @@
   #define PIN_I2C_FX5                           2   // GP2, Pin 12 on MCP23008
   #define PIN_I2C_FX6                           1   // GP1, Pin 11 on MCP23008
   #define PIN_I2C_FX7                           0   // GP0, Pin 10 on MCP23008
+
+  #define DISABLE                               HIGH
+  #define ENABLE                                LOW
 
   
   // Bluefruit Connect App Buttons
@@ -195,7 +205,7 @@
 
   // NeoPixel Settings
   //-------------
-  #define NUM_PIXELS                            10      // Total number of Pixels
+  #define NUM_PIXELS                            31      // Number of Pixels being addressed
 
 
 /*=========================================================================*/
@@ -252,7 +262,7 @@
 
   // I2C Expander Object
   //-------------
-  Adafruit_MCP23008 i2cExpander;
+  Adafruit_MCP23008 i2cExpander;    // Not compatible with Feather M0
 
 
   // NeoPixel Object
@@ -392,11 +402,29 @@
     //dht.begin();
     Serial.begin(SERIAL_BAUD_RATE);               // Sets the mode of communication between the CPU and the computer or other device to the serial value     
     delay(500);                                   // Short delay to allow Serial Port to open
+    
+    // ------------------------------- //
+    // -- Setup I/O Pins -- //
+    // ------------------------------- //
+    pinMode(PIN_CS, OUTPUT);                    // Chip Select pin for the SD card
+    pinMode(PIN_ONBOARD_LED, OUTPUT);           // Onboard indicator LED
 
+    pinMode(PIN_FAN, OUTPUT);                   // 
+    pinMode(PIN_MIST, OUTPUT);                  // 
+    
+    
+    // NeoPixel Setup
+    //-------------
     pixels.begin();
 
-    i2cExpander.begin();
-    
+    // Set all Pixels to OFF
+    for(uint8_t i=0; i < NUM_PIXELS; i++) 
+    {
+      pixels.setPixelColor(i, pixels.Color(0,0,0)); // off
+    }
+    pixels.show();
+
+ 
     // EasyButton Setup
     //-------------
     button.begin();
@@ -409,18 +437,11 @@
       button.enableInterrupt(buttonISR);
     }
     
-    // ------------------------------- //
-    // -- Setup I/O Pins -- //
-    // ------------------------------- //
-    pinMode(PIN_CS, OUTPUT);                    // Chip Select pin for the SD card
-    pinMode(PIN_ONBOARD_LED, OUTPUT);           // Onboard indicator LED
 
-    pinMode(PIN_FAN, OUTPUT);                   // 
-    pinMode(PIN_MIST, OUTPUT);                  // 
-
-    //pinMode(PIN_ENCODER_SW, INPUT_PULLUP);      // pin setup through EasyButton object
-
-    // I2C Expander Pin Setup
+    // I2C Expander Setup
+    //-------------
+    i2cExpander.begin();
+    
     i2cExpander.pinMode(PIN_I2C_FX0, OUTPUT);
     i2cExpander.pinMode(PIN_I2C_FX1, OUTPUT);
     i2cExpander.pinMode(PIN_I2C_FX2, OUTPUT);
@@ -430,11 +451,21 @@
     i2cExpander.pinMode(PIN_I2C_FX6, OUTPUT);
     i2cExpander.pinMode(PIN_I2C_FX7, OUTPUT);
 
+    // initialize FX control pins
+    i2cExpander.digitalWrite(PIN_I2C_FX0, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX1, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX2, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX3, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX4, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX5, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX6, DISABLE);
+    i2cExpander.digitalWrite(PIN_I2C_FX7, DISABLE);
+
     // Configure the reference voltage used for analog input (the value used as the top of the input range) 
     //so the voltage applied to pin AREF (5V) is used as top of analog read range
     //https://www.arduino.cc/reference/en/language/functions/analog-io/analogreference/
-    //analogReference(EXTERNAL);    // Command used for AVR-based boards
-    analogReference(AR_EXTERNAL);   // Command used for SAMD-based boards (e.g. Feather M0)    
+    //analogReference(EXTERNAL);    // Command used for AVR-based boards (e.g. Feather 32u4)
+    //analogReference(AR_EXTERNAL);   // Command used for SAMD-based boards (e.g. Feather M0)    
     
     // ------------------------------- //
     // -- Initialize Variables -- //
@@ -739,7 +770,7 @@
           fanPwm = 0;
           mistPwm = 0;
 
-          i2cExpander.digitalWrite(PIN_I2C_FX0, HIGH);
+          i2cExpander.digitalWrite(PIN_I2C_FX0, DISABLE);
  
           break;  // END OFF
           
@@ -748,7 +779,7 @@
           fanPwm = PWM_DEFAULT;
           mistPwm = PWM_MAX;
 
-          i2cExpander.digitalWrite(PIN_I2C_FX0, LOW);
+          i2cExpander.digitalWrite(PIN_I2C_FX0, ENABLE);
                  
           break;  // END CAMPFIRE
           
