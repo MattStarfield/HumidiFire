@@ -14,6 +14,9 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/27/2019
+ * - Upgraded to MCP23017 I2C 16 I/O Expander
+ * 
  * 11/20/2019
  * - Updated NUM_PIXELS to 31
  * - Moved to Feather 32u4 
@@ -72,7 +75,8 @@
   #include <Encoder.h>                  // http://www.pjrc.com/teensy/td_libs_Encoder.html
   #include <EasyButton.h>               // https://github.com/evert-arias/EasyButton
   #include <Adafruit_NeoPixel.h>        // https://github.com/adafruit/Adafruit_NeoPixel
-  #include <Adafruit_MCP23008.h>        // I2C Expander IC // https://github.com/adafruit/Adafruit-MCP23008-library
+  //#include <Adafruit_MCP23008.h>        // I2C 8 Expander IC // https://github.com/adafruit/Adafruit-MCP23008-library
+  #include <Adafruit_MCP23017.h>        // I2C 16 Expander IC//https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library
   
   
   //#include <SD.h>         //included in Arduino IDE core
@@ -138,7 +142,7 @@
   // NOTE: See BluefruitConfig.h for other pin definitions
   
   #define PIN_ONBOARD_LED                       13   // Built-in LED pin
-  #define PIN_CS                                10  // output - Chip Select for SD Card
+  #define PIN_CS                                10  // output - Chip Select for SPI device
 
   #define PIN_PIXELS                            12  // NeoPixel strip
   
@@ -150,16 +154,25 @@
   #define PIN_ENCODER_SW                        0   // Labeled "SW" pin on Encoder board (uses interrupt)
 
   // I2C Expander Pin Defines
+  // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library#Pin-Addressing
   //-------------
-  #define PIN_I2C_FX0                           7   // GP7, Pin 17 on MCP23008
-  #define PIN_I2C_FX1                           6   // GP6, Pin 16 on MCP23008
-  #define PIN_I2C_FX2                           5   // GP5, Pin 15 on MCP23008
-  #define PIN_I2C_FX3                           4   // GP4, Pin 14 on MCP23008
-  #define PIN_I2C_FX4                           3   // GP3, Pin 13 on MCP23008
-  #define PIN_I2C_FX5                           2   // GP2, Pin 12 on MCP23008
-  #define PIN_I2C_FX6                           1   // GP1, Pin 11 on MCP23008
-  #define PIN_I2C_FX7                           0   // GP0, Pin 10 on MCP23008
-
+  #define PIN_I2C_FX_RST                        0   // GPA0, Pin 21 on MCP23017
+  #define PIN_I2C_FX_T00                        1   // GPA1, Pin 22 on MCP23017
+  #define PIN_I2C_FX_T01                        2   // GPA2, Pin 23 on MCP23017
+  #define PIN_I2C_FX_T02                        3   // GPA3, Pin 24 on MCP23017
+  #define PIN_I2C_FX_T03                        4   // GPA4, Pin 25 on MCP23017
+  #define PIN_I2C_FX_T04                        5   // GPA5, Pin 26 on MCP23017
+  #define PIN_I2C_FX_T05                        6   // GPA6, Pin 27 on MCP23017
+  #define PIN_I2C_FX_T06                        7   // GPA7, Pin 28 on MCP23017
+  #define PIN_I2C_FX_T07                        15  // GPB7, Pin 8 on MCP23017
+  #define PIN_I2C_FX_T08                        14  // GPB6, Pin 7 on MCP23017
+  #define PIN_I2C_FX_T09                        13  // GPB5, Pin 6 on MCP23017
+  #define PIN_I2C_FX_T10                        12  // GPB4, Pin 5 on MCP23017
+  #define PIN_I2C_FX_VLP                        11  // GPB3, Pin 4 on MCP23017
+  #define PIN_I2C_FX_VLN                        10  // GPB2, Pin 3 on MCP23017
+  //#define PIN_I2C_                               9  // GPB1, Pin 2 on MCP23017
+  //#define PIN_I2C_                               8  // GPB0, Pin 1 on MCP23017
+      
   #define DISABLE                               HIGH
   #define ENABLE                                LOW
 
@@ -262,8 +275,8 @@
 
   // I2C Expander Object
   //-------------
-  Adafruit_MCP23008 i2cExpander;    // Not compatible with Feather M0
-
+  //Adafruit_MCP23008 i2cExpander;    // Not compatible with Feather M0
+  Adafruit_MCP23017 i2cExpander;    // Not compatible with Feather M0
 
   // NeoPixel Object
   //-------------
@@ -441,7 +454,15 @@
     // I2C Expander Setup
     //-------------
     i2cExpander.begin();
-    
+
+    // Does this work OK for initialization?
+    for (int i = 0; i<16; i++)
+    {
+      i2cExpander.pinMode(i, OUTPUT);
+      i2cExpander.digitalWrite(i, DISABLE);
+    }
+
+    /*
     i2cExpander.pinMode(PIN_I2C_FX0, OUTPUT);
     i2cExpander.pinMode(PIN_I2C_FX1, OUTPUT);
     i2cExpander.pinMode(PIN_I2C_FX2, OUTPUT);
@@ -460,6 +481,7 @@
     i2cExpander.digitalWrite(PIN_I2C_FX5, DISABLE);
     i2cExpander.digitalWrite(PIN_I2C_FX6, DISABLE);
     i2cExpander.digitalWrite(PIN_I2C_FX7, DISABLE);
+    */
 
     // Configure the reference voltage used for analog input (the value used as the top of the input range) 
     //so the voltage applied to pin AREF (5V) is used as top of analog read range
@@ -770,7 +792,7 @@
           fanPwm = 0;
           mistPwm = 0;
 
-          i2cExpander.digitalWrite(PIN_I2C_FX0, DISABLE);
+          i2cExpander.digitalWrite(PIN_I2C_FX_T00, DISABLE);
  
           break;  // END OFF
           
@@ -779,7 +801,7 @@
           fanPwm = PWM_DEFAULT;
           mistPwm = PWM_MAX;
 
-          i2cExpander.digitalWrite(PIN_I2C_FX0, ENABLE);
+          i2cExpander.digitalWrite(PIN_I2C_FX_T00, ENABLE);
                  
           break;  // END CAMPFIRE
           
