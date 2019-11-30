@@ -14,8 +14,11 @@
  * 
  * CHANGELOG:
  * ----------
+ * 11/29/2019
+ * - Added Current Monitor 
+ * 
  * 11/27/2019
- * - Upgraded to MCP23017 I2C 16 I/O Expander
+ * - Upgraded to MCP23017 I2C 16 I/O Expander Library
  * 
  * 11/20/2019
  * - Updated NUM_PIXELS to 31
@@ -146,12 +149,14 @@
 
   #define PIN_PIXELS                            12  // NeoPixel strip
   
-  #define PIN_FAN                               5   // output - PWM control MOSFET to Blower Fan
-  #define PIN_MIST                              6   // output - PWM control MOSFET to Mister / Bubbler
+  #define PIN_FAN                               6   // output - PWM control MOSFET to Blower Fan
+  #define PIN_MIST                              5   // output - MOSFET to Mister / Bubbler Relay - do NOT PWM control
 
   #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board 
   #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board
   #define PIN_ENCODER_SW                        0   // Labeled "SW" pin on Encoder board (uses interrupt)
+
+  #define PIN_CURRENT_MONITOR                   A3  // Analog Current Monitor 1A / V
 
   // I2C Expander Pin Defines
   // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library#Pin-Addressing
@@ -424,6 +429,8 @@
 
     pinMode(PIN_FAN, OUTPUT);                   // 
     pinMode(PIN_MIST, OUTPUT);                  // 
+
+    pinMode(PIN_CURRENT_MONITOR, INPUT);
     
     
     // NeoPixel Setup
