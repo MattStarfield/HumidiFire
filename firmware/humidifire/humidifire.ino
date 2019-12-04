@@ -11,9 +11,14 @@
  *    - percieved fan speed is not linaerly proportional to PWM duty cycle
  *    - most variation is in 0 - 127 range
  *    - lookup table approach? maybe just 4 speed settings?
+ *    
+ * - add current monitoring of mister to stop mode & alert when water is low
  * 
  * CHANGELOG:
  * ----------
+ * 12/4/2019
+ * - Added Mister Relay control to Pin 5
+ * 
  * 11/29/2019
  * - Added Current Monitor 
  * 
@@ -251,7 +256,8 @@
   Mode previousMode;
 
   byte fanPwm;         // PWM Duty Cycle 0 - 255
-  byte mistPwm;        // PWM Duty Cycle 0 - 255
+  //byte mistPwm;        // PWM Duty Cycle 0 - 255
+  bool mistState;      // Mister Control Relay State  
 
   bool settingsUpdate;      // flag that settings have been changed by BLE or button control 
 
@@ -355,7 +361,7 @@
         "SEASHORE",
         "TROPICS",
         
-        "NUM_MODES" // Keep LAST
+        "NUM_MODES" // Keep LAST to automatically designate the number of modes in the enum list
      };
 
     return modeString[m+1]; // enum Mode starts at -1
@@ -504,9 +510,12 @@
     settingsUpdate = false;
 
     fanPwm   = 0;                       // Duty Cycle of PWM signal, translates to blower fan speed
-    mistPwm  = 0;                       // Duty Cycle of PWM signal, translates to mister intensity
-    analogWrite(PIN_FAN, fanPwm);      // PWM = 0, initialize Fan off
-    analogWrite(PIN_MIST, mistPwm);    // PWM = 0, initialize Mister off
+    //mistPwm  = 0;                       // Duty Cycle of PWM signal, translates to mister intensity
+    mistState = false;
+    
+    analogWrite(PIN_FAN, fanPwm);      // PWM = 0, initialize Fan
+    //analogWrite(PIN_MIST, mistPwm);    // PWM = 0, initialize Mister off
+    digitalWrite(PIN_MIST, mistState);        // initialize Mister
 
     //currentMode = CAMPFIRE;                                  // initialize mode to CAMPFIRE
     currentMode = OFF;                                  // initialize mode to OFF
@@ -570,9 +579,9 @@
   
     button.update();  // EasyButton: update() function must be called repeatedly only if onPressedFor functionality is being used and interrupt is enabled
 
-    // ------------------------------- //
+    // ---------------------------------------------------- //
     // -- Handle Incoming Bluetooth Control Pad Packets -- //
-    // ------------------------------- //
+    // --------------------------------------------------- //
 
     // Check is ble is connected before trying to readPacket
     // otherwise, readPacket has to wait to timeout every loop before code can proceed
@@ -635,6 +644,8 @@
 
       // -- MIST CONTROL -- < > //
       
+      // MIST no longer under PWM control!!
+      /*
         if((buttnum == APP_BTN_RIGHT) && (pressed == 1))   //When 'RIGHT' button is pressed
         {
           //mistPwmPct += PWM_INCREMENT;
@@ -654,7 +665,7 @@
           else{mistPwm -= PWM_INCREMENT;}
                     
         }  // END "Left" Button
-      
+      */
       // -- END MIST CONTROL < > -- //
          
       
@@ -797,7 +808,8 @@
         case OFF:
         
           fanPwm = 0;
-          mistPwm = 0;
+          //mistPwm = 0;
+          mistState = false;
 
           i2cExpander.digitalWrite(PIN_I2C_FX_T00, DISABLE);
  
@@ -806,7 +818,8 @@
         case CAMPFIRE:
         
           fanPwm = PWM_DEFAULT;
-          mistPwm = PWM_MAX;
+          //mistPwm = PWM_MAX;
+          mistState = true;     // Mister ON
 
           i2cExpander.digitalWrite(PIN_I2C_FX_T00, ENABLE);
                  
@@ -849,15 +862,18 @@
       flame();      
       
       analogWrite(PIN_FAN, fanPwm);
-      analogWrite(PIN_MIST, mistPwm);  
+      //analogWrite(PIN_MIST, mistPwm);  
+      digitalWrite(PIN_MIST, mistState); 
     }
     else
     {
       fanPwm = 0;                    // This prevents settings from being changed when in OFF mode
-      mistPwm = 0;
+      //mistPwm = 0;
+      mistState = false;
       
       analogWrite(PIN_FAN, fanPwm);
-      analogWrite(PIN_MIST, mistPwm);
+      //analogWrite(PIN_MIST, mistPwm);
+      digitalWrite(PIN_MIST, mistState); 
 
       for(uint8_t i=0; i < NUM_PIXELS; i++) 
       {
@@ -896,7 +912,8 @@
           Serial.print(" \t");
   
           Serial.print("Mist:\t");
-          Serial.print(mistPwm);
+          //Serial.print(mistPwm);
+          mistState ? Serial.print("On") : Serial.print("Off"); // Print true = "On", false = "Off"
           Serial.print(" ");
           
         } // END Update Serial Monitor
@@ -919,7 +936,8 @@
           ble.print(" \t");
   
           ble.print("Mist:\t");
-          ble.print(mistPwm);
+          //ble.print(mistPwm);
+          mistState ? ble.print("On") : ble.print("Off"); // Print true = "On", false = "Off"
           ble.print(" ");
           
         } // END Update BLE Control Pad Display
