@@ -215,8 +215,8 @@
   //#define PWM_MAX                               1.00      // (%) Max PWM duty cycle % allowed in software
   //#define PWM_MIN                               0.00      // (%) Min PWM duty cycle % allowed in software
 
-  #define PWM_DEFAULT                           127      // (0 - 255) default PWM duty cycle
-  #define PWM_INCREMENT                         1        // (0 - 255) controller increments
+  #define PWM_DEFAULT                           4      // (0 - 255) default PWM duty cycle
+  #define PWM_INCREMENT                         4        // (0 - 255) controller increments
   #define PWM_MAX                               255      // (0 - 255) Max PWM duty cycle allowed in software
   #define PWM_MIN                               0        // (0 - 255) Min PWM duty cycle allowed in software
 
