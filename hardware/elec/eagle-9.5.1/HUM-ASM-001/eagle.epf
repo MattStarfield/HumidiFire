@@ -1,0 +1,17 @@
+[Eagle]
+Version="09 05 01"
+Platform="Windows"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibrary="C:/Users/mattg/Google Drive/Eagle/User Libraries/MG-Eagle_v1.lbr"
+
+[Win_1]
+Type="Control Panel"
+Number=0
+
+[Desktop]
+Screen="2621 2352"
+Window="Win_1"
