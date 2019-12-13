@@ -157,11 +157,11 @@
   #define PIN_FAN                               6   // output - PWM control MOSFET to Blower Fan
   #define PIN_MIST                              5   // output - MOSFET to Mister / Bubbler Relay - do NOT PWM control
 
-  #define PIN_ENCODER_A                         A2  // Labeled "CLK" pin on Encoder board 
-  #define PIN_ENCODER_B                         A1  // Labeled "DT" pin on Encoder board
-  #define PIN_ENCODER_SW                        0   // Labeled "SW" pin on Encoder board (uses interrupt)
+  #define PIN_ENCODER_A                         1  // Labeled "CLK" pin on Encoder board 
+  #define PIN_ENCODER_B                         0  // Labeled "DT" pin on Encoder board
+  #define PIN_ENCODER_SW                        11   // Labeled "SW" pin on Encoder board (uses interrupt)
 
-  #define PIN_CURRENT_MONITOR                   A3  // Analog Current Monitor 1A / V
+  #define PIN_CURRENT_MONITOR                   A0  // Analog Current Monitor, readout = 1A / V
 
   // I2C Expander Pin Defines
   // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library#Pin-Addressing
@@ -566,6 +566,8 @@
     bluefruitSetup();   // see BluefruitSetup.ino
 
     // ------- END BLE MODULE Setup
+
+   digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
     
   } // END SETUP
 
@@ -575,9 +577,8 @@
 
   void loop()
   {
-    digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
-  
-    button.update();  // EasyButton: update() function must be called repeatedly only if onPressedFor functionality is being used and interrupt is enabled
+    //button.update();  // EasyButton: update() function must be called repeatedly only if onPressedFor functionality is being used and interrupt is enabled
+    button.read(PIN_ENCODER_SW); // EasyButton: read() checks button for non-interrupt enabled pins
 
     // ---------------------------------------------------- //
     // -- Handle Incoming Bluetooth Control Pad Packets -- //
