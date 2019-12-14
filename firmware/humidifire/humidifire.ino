@@ -156,6 +156,7 @@
   
   #define PIN_FAN                               6   // output - PWM control MOSFET to Blower Fan
   #define PIN_MIST                              5   // output - MOSFET to Mister / Bubbler Relay - do NOT PWM control
+  #define PIN_AMP                               10  // output - nSHUTDOWN pin on Audio Amplifier board
 
   #define PIN_ENCODER_A                         1  // Labeled "CLK" pin on Encoder board 
   #define PIN_ENCODER_B                         0  // Labeled "DT" pin on Encoder board
@@ -435,6 +436,7 @@
 
     pinMode(PIN_FAN, OUTPUT);                   // 
     pinMode(PIN_MIST, OUTPUT);                  // 
+    pinMode(PIN_AMP, OUTPUT);                   //
 
     pinMode(PIN_CURRENT_MONITOR, INPUT);
     
@@ -568,6 +570,8 @@
     // ------- END BLE MODULE Setup
 
    digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
+
+   digitalWrite(PIN_AMP, HIGH);                    // Enable Audio Amplifer Board
     
   } // END SETUP
 
