@@ -10175,11 +10175,8 @@ the large DC current draw</text>
 </net>
 <net name="K2-NC" class="0">
 <segment>
-<pinref part="K2" gate="G$1" pin="NC-1"/>
 <pinref part="K2" gate="G$1" pin="NC-2"/>
-<wire x1="91.44" y1="-55.88" x2="91.44" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="91.44" y1="-58.42" x2="93.98" y2="-58.42" width="0.1524" layer="91"/>
-<junction x="91.44" y="-58.42"/>
 <wire x1="93.98" y1="-58.42" x2="93.98" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="J14" gate="J$1" pin="P1"/>
 <wire x1="93.98" y1="-63.5" x2="96.52" y2="-63.5" width="0.1524" layer="91"/>
@@ -10190,17 +10187,14 @@ the large DC current draw</text>
 </net>
 <net name="K1-NC" class="0">
 <segment>
-<pinref part="K1" gate="G$1" pin="NC-1"/>
-<pinref part="K1" gate="G$1" pin="NC-2"/>
-<wire x1="91.44" y1="-22.86" x2="91.44" y2="-25.4" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="-25.4" x2="93.98" y2="-25.4" width="0.1524" layer="91"/>
-<junction x="91.44" y="-25.4"/>
-<wire x1="93.98" y1="-25.4" x2="93.98" y2="-30.48" width="0.1524" layer="91"/>
 <pinref part="J13" gate="J$1" pin="P1"/>
 <wire x1="93.98" y1="-30.48" x2="96.52" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="-30.48" x2="99.06" y2="-30.48" width="0.1524" layer="91"/>
 <junction x="96.52" y="-30.48"/>
 <label x="109.22" y="-30.48" size="1.27" layer="95" font="vector"/>
+<pinref part="K1" gate="G$1" pin="NC-1"/>
+<wire x1="91.44" y1="-22.86" x2="93.98" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="-22.86" x2="93.98" y2="-30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MIST-VIN" class="0">

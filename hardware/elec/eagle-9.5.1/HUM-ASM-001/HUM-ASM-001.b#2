@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.012" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.006" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.005" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="12" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="4" visible="yes" active="yes"/>
@@ -22,10 +22,10 @@
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="16" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="27" name="tValues" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
-<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="27" name="tValues" color="16" fill="1" visible="no" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
 <layer number="33" name="tFinish" color="17" fill="3" visible="no" active="yes"/>
@@ -40,7 +40,7 @@
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="20" fill="1" visible="yes" active="yes"/>
-<layer number="47" name="Measures" color="5" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="48" name="Document" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
@@ -475,14 +475,14 @@ Keepout</text>
 <wire x1="11.43" y1="-8.89" x2="8.89" y2="-11.43" width="0.1524" layer="21" curve="-90"/>
 <wire x1="8.89" y1="-11.43" x2="-8.89" y2="-11.43" width="0.1524" layer="21"/>
 <wire x1="-8.89" y1="-11.43" x2="-11.43" y2="-8.89" width="0.1524" layer="21" curve="-90"/>
-<text x="-5.695" y="9.044" size="1.27" layer="21" ratio="10" rot="R270">Vin-</text>
-<text x="4.438" y="9.06" size="1.27" layer="21" ratio="10" rot="R270">Vin+</text>
-<text x="-8.89" y="-3.81" size="1.27" layer="21" ratio="10" rot="R90">INA169</text>
-<text x="-4.572" y="-7.747" size="1.016" layer="21" ratio="10" rot="R90">VCC</text>
-<text x="-2.159" y="-7.62" size="1.016" layer="21" ratio="10" rot="R90">GND</text>
-<text x="0.508" y="-7.747" size="1.016" layer="21" ratio="10" rot="R90">VIN-</text>
-<text x="2.921" y="-7.747" size="1.016" layer="21" ratio="10" rot="R90">VIN+</text>
-<text x="5.588" y="-7.747" size="1.016" layer="21" ratio="10" rot="R90">OUT</text>
+<text x="-5.695" y="9.044" size="1.016" layer="21" rot="R270">Vin-</text>
+<text x="4.438" y="9.06" size="1.016" layer="21" rot="R270">Vin+</text>
+<text x="-8.89" y="-3.81" size="1.27" layer="21" rot="R90">INA169</text>
+<text x="-4.572" y="-7.747" size="1.016" layer="21" rot="R90">VCC</text>
+<text x="-2.159" y="-7.62" size="1.016" layer="21" rot="R90">GND</text>
+<text x="0.508" y="-7.747" size="1.016" layer="21" rot="R90">VIN-</text>
+<text x="2.921" y="-7.747" size="1.016" layer="21" rot="R90">VIN+</text>
+<text x="5.588" y="-7.747" size="1.016" layer="21" rot="R90">OUT</text>
 <circle x="-8.89" y="-8.89" radius="1.999996875" width="0.2032" layer="21"/>
 <circle x="-8.89" y="7" radius="1.999996875" width="0.2032" layer="21"/>
 <circle x="8.89" y="7" radius="1.999996875" width="0.2032" layer="21"/>
@@ -562,6 +562,44 @@ Keepout</text>
 <wire x1="3.81" y1="2.413" x2="3.81" y2="-3.556" width="0.1016" layer="39"/>
 <circle x="-1.18" y="3.048" radius="0.508" width="0" layer="21"/>
 <circle x="-1.18" y="3.048" radius="0.508" width="0" layer="51"/>
+</package>
+<package name="1X04">
+<wire x1="6.985" y1="1.27" x2="8.255" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="8.255" y1="1.27" x2="8.89" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="8.89" y1="-0.635" x2="8.255" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="3.81" y1="0.635" x2="4.445" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="4.445" y1="1.27" x2="5.715" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="5.715" y1="1.27" x2="6.35" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="6.35" y1="-0.635" x2="5.715" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="5.715" y1="-1.27" x2="4.445" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="4.445" y1="-1.27" x2="3.81" y2="-0.635" width="0.2032" layer="21"/>
+<wire x1="6.985" y1="1.27" x2="6.35" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="6.35" y1="-0.635" x2="6.985" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="8.255" y1="-1.27" x2="6.985" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="-0.635" y1="1.27" x2="0.635" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="0.635" y1="1.27" x2="1.27" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="1.27" y1="-0.635" x2="0.635" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="1.27" y1="0.635" x2="1.905" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="1.905" y1="1.27" x2="3.175" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="3.175" y1="1.27" x2="3.81" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="3.81" y1="-0.635" x2="3.175" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="3.175" y1="-1.27" x2="1.905" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="1.905" y1="-1.27" x2="1.27" y2="-0.635" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="0.635" x2="-1.27" y2="-0.635" width="0.2032" layer="21"/>
+<wire x1="-0.635" y1="1.27" x2="-1.27" y2="0.635" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="-0.635" x2="-0.635" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="0.635" y1="-1.27" x2="-0.635" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="8.89" y1="0.635" x2="8.89" y2="-0.635" width="0.2032" layer="21"/>
+<pad name="1" x="0" y="0" drill="1.016" diameter="1.8796" shape="square" rot="R90"/>
+<pad name="2" x="2.54" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="3" x="5.08" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="4" x="7.62" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
+<text x="-1.3462" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-1.27" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="7.366" y1="-0.254" x2="7.874" y2="0.254" layer="51"/>
+<rectangle x1="4.826" y1="-0.254" x2="5.334" y2="0.254" layer="51"/>
+<rectangle x1="2.286" y1="-0.254" x2="2.794" y2="0.254" layer="51"/>
+<rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
 </package>
 <package name="1X04_NO_SILK_ALL_ROUND">
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
@@ -1316,12 +1354,12 @@ design rules under a new name.</description>
 <attribute name="NAME" x="49.435" y="95.948" size="1.016" layer="25" ratio="10" rot="R270" align="top-left"/>
 <attribute name="VALUE" x="48.036" y="95.926" size="0.762" layer="27" ratio="11" rot="R270" align="top-left"/>
 </element>
-<element name="J10" library="MG-Eagle_v1" package="1X04_NO_SILK_ALL_ROUND" value="" x="41.91" y="15.24" smashed="yes">
+<element name="J10" library="MG-Eagle_v1" package="1X04" value="" x="41.91" y="15.24" smashed="yes">
 <attribute name="NAME" x="40.5638" y="17.0688" size="1.27" layer="25" ratio="10"/>
 <attribute name="PROD_ID" value="CONN-09696" x="146.05" y="-137.16" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="40.64" y="12.065" size="1.27" layer="27"/>
 </element>
-<element name="J11" library="MG-Eagle_v1" package="1X04_NO_SILK_ALL_ROUND" value="" x="54.61" y="15.24" smashed="yes">
+<element name="J11" library="MG-Eagle_v1" package="1X04" value="" x="54.61" y="15.24" smashed="yes">
 <attribute name="NAME" x="53.2638" y="17.0688" size="1.27" layer="25" ratio="10"/>
 <attribute name="PROD_ID" value="CONN-09696" x="170.18" y="-137.16" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="53.34" y="12.065" size="1.27" layer="27"/>
