@@ -8975,8 +8975,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="J18" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="PTH"/>
 <part name="J22" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="NO_SILK_ALL_ROUND"/>
 <part name="U$28" library="MG-Eagle_v1" deviceset="V0_GND" device=""/>
-<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="1X03_NO_SILK"/>
-<part name="J23" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="1X03_NO_SILK"/>
+<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="PTH"/>
+<part name="J23" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="PTH"/>
 <part name="J19" library="MG-Eagle_v1" deviceset="CON_HEADER_1X2" device="1X02_NO_SILK"/>
 <part name="J14" library="MG-Eagle_v1" deviceset="CON_HEADER_1X2" device="1X02_NO_SILK"/>
 <part name="J6" library="MG-Eagle_v1" deviceset="CON_HEADER_1X1" device="-QC_TAB_121786-1"/>

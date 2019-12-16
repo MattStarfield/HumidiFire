@@ -1587,7 +1587,7 @@ design rules under a new name.</description>
 <attribute name="DIGI-KEY_PURCHASE_URL" value="https://www.digikey.com/product-detail/en/microchip-technology/MCP23017-E-SP/MCP23017-E-SP-ND/894272?utm_source=snapeda&amp;utm_medium=aggregator&amp;utm_campaign=symbol" x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="Microchip" x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
 <attribute name="MP" value="MCP23017-E/SP" x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
-<attribute name="NAME" x="10.47133125" y="50.1886" size="1.781040625" layer="25"/>
+<attribute name="NAME" x="18.70093125" y="12.3934" size="1.016" layer="25"/>
 <attribute name="PACKAGE" value="DIP-28 Microchip" x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
 </element>
 <element name="VRG-2" library="MG-Eagle_v1" package="VRG_NID100-X" value="NID100-5" x="66.04" y="6.89" smashed="yes">

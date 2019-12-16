@@ -2037,7 +2037,7 @@ High-power, low thermal resistance package.</description>
 <text x="-7.493" y="4.572" size="1.016" layer="21">!SHTDWN</text>
 <text x="-7.493" y="7.239" size="1.016" layer="21">GND</text>
 <text x="-7.493" y="9.906" size="1.016" layer="21">VCC</text>
-<text x="-6.6548" y="11.9888" size="1.27" layer="21" ratio="10">MAX98306 Amp</text>
+<text x="-6.6548" y="11.9888" size="1.27" layer="21">MAX98306 Amp</text>
 <wire x1="-8.763" y1="-13.97" x2="-11.303" y2="-11.43" width="0.1524" layer="21" curve="-90"/>
 <wire x1="-11.303" y1="-11.43" x2="-11.303" y2="11.43" width="0.1524" layer="21"/>
 <wire x1="-11.303" y1="11.43" x2="-8.763" y2="13.97" width="0.1524" layer="21" curve="-90"/>
@@ -2105,6 +2105,7 @@ High-power, low thermal resistance package.</description>
 <pad name="15" x="8.382" y="-5.8166" drill="1.1938" diameter="2.286"/>
 <text x="0.635" y="1.397" size="1.016" layer="21">L+OUT</text>
 <text x="0.635" y="-2.794" size="1.016" layer="21">R+OUT</text>
+<text x="-10.16" y="14.478" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
 </package>
 <package name="1X14_NO_SILK">
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.8796" rot="R90"/>

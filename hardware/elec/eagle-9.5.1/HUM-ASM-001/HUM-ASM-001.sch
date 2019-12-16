@@ -9744,16 +9744,16 @@ from the breakout pads</text>
 <sheet>
 <description>Power</description>
 <plain>
-<text x="165.1" y="-170.18" size="5.08" layer="97" font="vector">Power</text>
+<text x="165.1" y="-170.18" size="5.08" layer="97" font="vector">Power &amp; Control</text>
 <text x="144.78" y="-22.86" size="1.27" layer="97" font="vector">Mister draws 
 4.4A @ 48V (212W)</text>
 <text x="144.78" y="-27.94" size="1.27" layer="97" font="vector">Dual Relays to distribute
 the large DC current draw</text>
-<text x="215.9" y="-91.44" size="1.778" layer="97" font="vector">48V to 5V DC Converter</text>
+<text x="210.82" y="-91.44" size="1.778" layer="97" font="vector">48V to 5V DC Converter</text>
 <text x="71.12" y="-12.7" size="1.778" layer="97" font="vector">Mister Control</text>
 <text x="88.9" y="-124.46" size="1.27" layer="97" font="vector">Vout = 1.25 * (1 + (R5/R6) )</text>
 <text x="142.24" y="-129.54" size="1.778" layer="97" font="vector">24V Fan</text>
-<text x="33.02" y="-152.4" size="1.27" layer="97" font="vector">LM317 requires heatsink</text>
+<text x="50.8" y="-149.86" size="1.27" layer="97" font="vector">LM317 requires heatsink</text>
 <text x="76.2" y="-116.84" size="1.778" layer="97" font="vector">Fan Control</text>
 <text x="177.8" y="-127" size="1.778" layer="97" font="vector" rot="MR0">DC in: GND</text>
 <text x="177.8" y="-139.7" size="1.778" layer="97" font="vector" rot="MR0">DC in: 48V</text>
@@ -9792,9 +9792,9 @@ the large DC current draw</text>
 <attribute name="NAME" x="88.9" y="-165.1" size="1.778" layer="95" font="vector"/>
 <attribute name="VALUE" x="88.9" y="-167.64" size="1.27" layer="96" font="vector"/>
 </instance>
-<instance part="THM-1" gate="G$1" x="35.56" y="-144.78" smashed="yes">
-<attribute name="NAME" x="30.353" y="-134.493" size="1.778" layer="95"/>
-<attribute name="VALUE" x="30.353" y="-137.287" size="1.27" layer="96"/>
+<instance part="THM-1" gate="G$1" x="55.88" y="-144.78" smashed="yes">
+<attribute name="NAME" x="50.673" y="-134.493" size="1.778" layer="95"/>
+<attribute name="VALUE" x="50.673" y="-137.287" size="1.27" layer="96"/>
 </instance>
 <instance part="J3" gate="G$1" x="137.16" y="-132.08" smashed="yes">
 <attribute name="NAME" x="134.62" y="-126.238" size="1.778" layer="95"/>

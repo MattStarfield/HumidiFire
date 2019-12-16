@@ -9908,9 +9908,9 @@ the large DC current draw</text>
 <attribute name="VALUE" x="184.658" y="-123.444" size="1.27" layer="96" font="vector" ratio="12" rot="MR180" align="top-center"/>
 <attribute name="NAME" x="180.34" y="-130.302" size="1.778" layer="95" font="vector" rot="MR180"/>
 </instance>
-<instance part="LED2" gate="G$1" x="205.74" y="-99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="209.804" y="-95.631" size="1.778" layer="95" font="vector" rot="R180"/>
-<attribute name="VALUE" x="212.344" y="-104.902" size="1.27" layer="96" font="vector" ratio="12" rot="R180" align="top-left"/>
+<instance part="LED2" gate="G$1" x="208.28" y="-99.06" smashed="yes">
+<attribute name="NAME" x="204.216" y="-102.489" size="1.778" layer="95" font="vector"/>
+<attribute name="VALUE" x="204.216" y="-103.378" size="1.27" layer="96" font="vector" ratio="12" align="top-left"/>
 </instance>
 <instance part="R11" gate="G$1" x="218.44" y="-99.06" smashed="yes">
 <attribute name="NAME" x="221.488" y="-98.806" size="1.778" layer="95" font="vector"/>
@@ -10082,8 +10082,8 @@ the large DC current draw</text>
 <wire x1="226.06" y1="-114.3" x2="200.66" y2="-114.3" width="0.1524" layer="91"/>
 <junction x="226.06" y="-114.3"/>
 <junction x="200.66" y="-114.3"/>
-<pinref part="LED2" gate="G$1" pin="C"/>
-<wire x1="203.2" y1="-99.06" x2="200.66" y2="-99.06" width="0.1524" layer="91"/>
+<pinref part="LED2" gate="G$1" pin="A"/>
+<wire x1="200.66" y1="-99.06" x2="203.2" y2="-99.06" width="0.1524" layer="91"/>
 <junction x="200.66" y="-99.06"/>
 </segment>
 <segment>
@@ -10336,9 +10336,9 @@ the large DC current draw</text>
 </net>
 <net name="N$19" class="0">
 <segment>
+<pinref part="LED2" gate="G$1" pin="C"/>
 <pinref part="R11" gate="G$1" pin="P1"/>
-<pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="213.36" y1="-99.06" x2="210.82" y2="-99.06" width="0.1524" layer="91"/>
+<wire x1="210.82" y1="-99.06" x2="213.36" y2="-99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

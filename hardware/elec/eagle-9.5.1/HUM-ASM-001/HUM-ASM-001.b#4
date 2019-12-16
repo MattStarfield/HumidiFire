@@ -8,23 +8,23 @@
 </settings>
 <grid distance="0.012" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.006" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="12" fill="1" visible="yes" active="yes"/>
-<layer number="2" name="Route2" color="1" fill="4" visible="yes" active="yes"/>
-<layer number="15" name="Route15" color="4" fill="4" visible="yes" active="yes"/>
-<layer number="16" name="Bottom" color="9" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="12" fill="1" visible="no" active="yes"/>
+<layer number="2" name="Route2" color="1" fill="4" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="4" fill="4" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="9" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="25" name="tNames" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
@@ -32,19 +32,19 @@
 <layer number="34" name="bFinish" color="17" fill="6" visible="no" active="yes"/>
 <layer number="35" name="tGlue" color="19" fill="4" visible="no" active="yes"/>
 <layer number="36" name="bGlue" color="19" fill="5" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
-<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="46" name="Milling" color="20" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="20" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="5" fill="1" visible="no" active="yes"/>
-<layer number="48" name="Document" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="49" name="Reference" color="5" fill="1" visible="yes" active="yes"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="3" fill="1" visible="yes" active="yes"/>
+<layer number="48" name="Document" color="6" fill="1" visible="no" active="yes"/>
+<layer number="49" name="Reference" color="5" fill="1" visible="no" active="yes"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="3" fill="1" visible="no" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
@@ -109,7 +109,7 @@
 <layer number="155" name="FabDoc3" color="7" fill="15" visible="no" active="no"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="no" active="no"/>
 <layer number="200" name="tBMP" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="201" name="bBMP" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="201" name="bBMP" color="7" fill="1" visible="no" active="yes"/>
 <layer number="202" name="202bmp" color="3" fill="1" visible="no" active="no"/>
 <layer number="203" name="203bmp" color="4" fill="10" visible="no" active="no"/>
 <layer number="204" name="204bmp" color="5" fill="10" visible="no" active="no"/>
@@ -160,7 +160,7 @@
 <wire x1="95.885" y1="99.06" x2="3.175" y2="99.06" width="0" layer="20"/>
 <wire x1="3.175" y1="99.06" x2="0" y2="95.885" width="0" layer="20" curve="90"/>
 <text x="30.48" y="96.9264" size="1.27" layer="21" font="vector" ratio="10">Rotary Encoder</text>
-<text x="51.5112" y="96.9264" size="1.27" layer="21" font="vector" ratio="10">Fan</text>
+<text x="51.5112" y="97.2312" size="1.27" layer="21" font="vector" ratio="10">Fan</text>
 <text x="31.0896" y="78.6384" size="1.27" layer="21" font="vector" ratio="10" rot="R90">SW</text>
 <text x="33.8328" y="78.0288" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
 <text x="38.7096" y="78.0288" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
@@ -1381,22 +1381,22 @@ design rules under a new name.</description>
 </autorouter>
 <elements>
 <element name="ASM-3" library="MG-Eagle_v1" package="ASM_ADAFRUIT_FEATHER_BLUEFRUIT" value="Feather Bluefruit 32u4" x="46.99" y="52.07" smashed="yes" rot="R180">
-<attribute name="NAME" x="57.15" y="76.8096" size="1.27" layer="25" ratio="10" rot="R180" align="top-left"/>
+<attribute name="NAME" x="34.7472" y="32.766" size="1.27" layer="25" ratio="10" rot="R270" align="top-left"/>
 </element>
 <element name="ASM-4" library="MG-Eagle_v1" package="ASM_ADAFRUIT_SOUND_FX_BOARD" value="" x="15.621" y="38.227" smashed="yes" rot="R90">
-<attribute name="NAME" x="20.4086" y="64.0062" size="1.27" layer="25" ratio="10" align="top-left"/>
+<attribute name="NAME" x="27.4338" y="15.227" size="1.27" layer="25" ratio="10" rot="R90" align="top-left"/>
 </element>
 <element name="ASM-1" library="MG-Eagle_v1" package="ASM_ADAFRUIT_MAX98306_AMP_MOUNTING_HOLES" value="" x="13.97" y="78.74" smashed="yes" rot="R180">
-<attribute name="NAME" x="17.9324" y="93.3196" size="1.27" layer="25" font="vector" ratio="10"/>
+<attribute name="NAME" x="27.3812" y="85.9028" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
 </element>
 <element name="ASM-2" library="MG-Eagle_v1" package="ASM_ADAFRUIT_INA169_MOUNTING_HOLES" value="" x="77.47" y="67.31" smashed="yes" rot="R270">
-<attribute name="NAME" x="79.756" y="79.0956" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="64.77" y="57.8104" size="1.27" layer="25" ratio="10" rot="R90"/>
 </element>
 <element name="C1" library="MG-Eagle_v1" package="CAP_E-035X080" value="100uF, 50V" x="73.66" y="85.09" smashed="yes" rot="R270">
-<attribute name="NAME" x="68.58" y="81.1657" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="68.58" y="81.1657" size="1.016" layer="25"/>
 </element>
-<element name="C2" library="MG-Eagle_v1" package="CAP_E-035X080" value="100uF, 50V" x="35.56" y="16.51" smashed="yes">
-<attribute name="NAME" x="32.4104" y="20.6629" size="1.016" layer="25"/>
+<element name="C2" library="MG-Eagle_v1" package="CAP_E-035X080" value="100uF, 50V" x="36.0172" y="15.9512" smashed="yes" rot="R270">
+<attribute name="NAME" x="32.1056" y="19.7485" size="1.016" layer="25"/>
 </element>
 <element name="D1" library="MG-Eagle_v1" package="DIODE-1N4001" value="1N4001" x="64.77" y="27.94" smashed="yes" rot="SR270">
 <attribute name="NAME" x="63.119" y="29.4894" size="1.016" layer="25" ratio="10" rot="SR90"/>
@@ -1502,7 +1502,7 @@ design rules under a new name.</description>
 <attribute name="PROD_ID" value="TRANS-10060" x="-49.53" y="-20.32" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="Q1" library="MG-Eagle_v1" package="TO-220-VERTICAL" value="IRLB8721PBF" x="64.77" y="86.36" smashed="yes" rot="R90">
-<attribute name="NAME" x="63.6524" y="80.2386" size="1.016" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="63.3476" y="80.5434" size="1.016" layer="25" font="vector" rot="R180"/>
 <attribute name="PROD_ID" value="TRANS-10060" x="195.58" y="168.91" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="R7" library="MG-Eagle_v1" package="AXIAL-0.4" value="1k" x="50.8" y="46.99" smashed="yes" rot="R90">
@@ -1546,7 +1546,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="41.021" y="45.9232" size="0.8128" layer="27" font="vector" ratio="7" rot="SR90"/>
 </element>
 <element name="THM-1" library="MG-Eagle_v1" package="SK95-2M3" package3d_urn="urn:adsk.eagle:package:14183/1" value="V5629W220" x="86.36" y="87.63" smashed="yes" rot="R270">
-<attribute name="NAME" x="93.5482" y="84.6328" size="1.016" layer="25" rot="R90"/>
+<attribute name="NAME" x="91.8464" y="80.7466" size="1.016" layer="25" rot="R180"/>
 <attribute name="POPULARITY" value="0" x="-41.91" y="31.75" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="U1" library="MG-Eagle_v1" package="DIP787W45P254L3556H508Q28" value="MCP23017-E/SP" x="15.24" y="31.75" smashed="yes">
@@ -1559,8 +1559,8 @@ design rules under a new name.</description>
 <attribute name="PACKAGE" value="DIP-28 Microchip" x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
 </element>
 <element name="VRG-2" library="MG-Eagle_v1" package="VRG_NID100-X" value="NID100-5" x="66.04" y="6.89" smashed="yes">
-<attribute name="NAME" x="93.2048" y="7.112" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="94.7288" y="7.2644" size="0.8128" layer="27" font="vector" ratio="7" rot="SR90"/>
+<attribute name="NAME" x="67.2592" y="14.8712" size="1.27" layer="25" font="vector" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="62.1284" y="11.6464" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="VRG-1" library="MG-Eagle_v1" package="TO-220-VERTICAL" value="LM317" x="82.55" y="87.63" smashed="yes" rot="R270">
 <attribute name="NAME" x="81.4832" y="94.5134" size="1.016" layer="25" font="vector"/>

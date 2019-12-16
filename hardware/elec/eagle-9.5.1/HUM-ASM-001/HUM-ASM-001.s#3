@@ -6085,7 +6085,7 @@ Current Monitor</text>
 <gate name="G$1" symbol="M03X2" x="0" y="0"/>
 </gates>
 <devices>
-<device name="SHROUD" package="2X3-SHROUDED">
+<device name="-SHROUD" package="2X3-SHROUDED">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -8910,7 +8910,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <attribute name="DESIGNER" value="Matt Garfield"/>
 </part>
 <part name="ASM-3" library="MG-Eagle_v1" deviceset="ASM_ADAFRUIT_FEATHER_BLUEFRUIT" device="" value="Feather Bluefruit 32u4"/>
-<part name="J2" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
+<part name="J2" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
 <part name="U1" library="MG-Eagle_v1" deviceset="IIC_MCP23017-E/SP" device="" value="MCP23017-E/SP"/>
 <part name="FRAME4" library="MG-Eagle_v1" deviceset="SCH_FRAME_LETTER_8.5X11" device="">
 <attribute name="CNAME" value="HumidiFire"/>
@@ -9004,8 +9004,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="JP8" library="MG-Eagle_v1" deviceset="CON_JUMPER_PAD-2-NC_BY_TRACE" device=""/>
 <part name="R5" library="MG-Eagle_v1" deviceset="RES_RESISTOR" device="-PTH-1/4W" value="100"/>
 <part name="R6" library="MG-Eagle_v1" deviceset="RES_RESISTOR" device="-PTH-1/4W" value="100"/>
-<part name="J20" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
-<part name="J21" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
+<part name="J20" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
+<part name="J21" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
 <part name="C2" library="MG-Eagle_v1" deviceset="CAP_THT_POL" device="-E-035X080MM" value="100uF, 50V"/>
 <part name="U$36" library="MG-Eagle_v1" deviceset="V0_GND" device=""/>
 <part name="U$37" library="MG-Eagle_v1" deviceset="V5.0" device=""/>

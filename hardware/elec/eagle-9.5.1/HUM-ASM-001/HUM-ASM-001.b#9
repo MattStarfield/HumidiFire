@@ -23,7 +23,7 @@
 <layer number="25" name="tNames" color="16" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="16" fill="1" visible="yes" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
@@ -36,13 +36,13 @@
 <layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
-<layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
-<layer number="46" name="Milling" color="20" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="5" fill="1" visible="no" active="yes"/>
-<layer number="48" name="Document" color="6" fill="1" visible="no" active="yes"/>
-<layer number="49" name="Reference" color="5" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="20" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="48" name="Document" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
@@ -159,6 +159,39 @@
 <wire x1="99.06" y1="95.885" x2="95.885" y2="99.06" width="0" layer="20" curve="90"/>
 <wire x1="95.885" y1="99.06" x2="3.175" y2="99.06" width="0" layer="20"/>
 <wire x1="3.175" y1="99.06" x2="0" y2="95.885" width="0" layer="20" curve="90"/>
+<text x="30.48" y="96.9264" size="1.27" layer="21" font="vector" ratio="10">Rotary Encoder</text>
+<text x="51.5112" y="96.9264" size="1.27" layer="21" font="vector" ratio="10">Fan</text>
+<text x="31.0896" y="78.6384" size="1.27" layer="21" font="vector" ratio="10" rot="R90">SW</text>
+<text x="33.8328" y="78.0288" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
+<text x="38.7096" y="78.0288" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
+<text x="43.8912" y="78.0288" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
+<text x="36.2712" y="79.8576" size="1.27" layer="21" font="vector" ratio="10" rot="R90">A</text>
+<text x="41.148" y="79.8576" size="1.27" layer="21" font="vector" ratio="10" rot="R90">B</text>
+<text x="60.0456" y="93.5736" size="1.27" layer="21" font="vector" ratio="10">24V</text>
+<text x="89.0016" y="72.2376" size="1.27" layer="21" font="vector" ratio="10" rot="R90">Mist V+</text>
+<text x="89.0016" y="63.3984" size="1.27" layer="21" font="vector" ratio="10" rot="R90">Mist GND</text>
+<text x="89.3064" y="55.7784" size="1.27" layer="21" font="vector" ratio="10" rot="R90">48V</text>
+<text x="89.3064" y="48.1584" size="1.27" layer="21" font="vector" ratio="10" rot="R90">GND</text>
+<text x="87.1728" y="49.9872" size="1.4224" layer="21" font="vector" ratio="12" rot="R90">DC-In</text>
+<wire x1="98.7552" y1="45.72" x2="87.7824" y2="45.72" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="45.72" x2="87.7824" y2="49.3776" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="49.3776" x2="87.7824" y2="53.34" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="53.34" x2="87.7824" y2="55.7784" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="55.7784" x2="87.7824" y2="60.6552" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="60.6552" x2="98.7552" y2="60.6552" width="0.1524" layer="21"/>
+<wire x1="98.7552" y1="60.6552" x2="98.7552" y2="53.34" width="0.1524" layer="21"/>
+<wire x1="98.7552" y1="53.34" x2="98.7552" y2="45.72" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="53.34" x2="98.7552" y2="53.34" width="0.1524" layer="21"/>
+<wire x1="87.4776" y1="62.7888" x2="98.7552" y2="62.7888" width="0.1524" layer="21"/>
+<wire x1="98.7552" y1="62.7888" x2="98.7552" y2="71.3232" width="0.1524" layer="21"/>
+<wire x1="98.7552" y1="71.3232" x2="98.7552" y2="78.6384" width="0.1524" layer="21"/>
+<wire x1="98.7552" y1="78.6384" x2="87.4776" y2="78.6384" width="0.1524" layer="21"/>
+<wire x1="87.4776" y1="78.6384" x2="87.4776" y2="71.3232" width="0.1524" layer="21"/>
+<wire x1="87.4776" y1="71.3232" x2="87.4776" y2="62.7888" width="0.1524" layer="21"/>
+<wire x1="87.4776" y1="71.3232" x2="98.7552" y2="71.3232" width="0.1524" layer="21"/>
+<wire x1="87.7824" y1="55.7784" x2="85.0392" y2="55.7784" width="0.1524" layer="21"/>
+<wire x1="85.0392" y1="55.7784" x2="85.0392" y2="49.3776" width="0.1524" layer="21"/>
+<wire x1="85.0392" y1="49.3776" x2="87.7824" y2="49.3776" width="0.1524" layer="21"/>
 </plain>
 <libraries>
 <library name="MG-Eagle_v1">
@@ -368,7 +401,7 @@ Keepout</text>
 <text x="-7.493" y="4.572" size="1.016" layer="21">!SHTDWN</text>
 <text x="-7.493" y="7.239" size="1.016" layer="21">GND</text>
 <text x="-7.493" y="9.906" size="1.016" layer="21">VCC</text>
-<text x="-6.6548" y="11.9888" size="1.27" layer="21" ratio="10">MAX98306 Amp</text>
+<text x="-6.6548" y="11.9888" size="1.27" layer="21">MAX98306 Amp</text>
 <wire x1="-8.763" y1="-13.97" x2="-11.303" y2="-11.43" width="0.1524" layer="21" curve="-90"/>
 <wire x1="-11.303" y1="-11.43" x2="-11.303" y2="11.43" width="0.1524" layer="21"/>
 <wire x1="-11.303" y1="11.43" x2="-8.763" y2="13.97" width="0.1524" layer="21" curve="-90"/>
@@ -436,6 +469,7 @@ Keepout</text>
 <pad name="15" x="8.382" y="-5.8166" drill="1.1938" diameter="2.286"/>
 <text x="0.635" y="1.397" size="1.016" layer="21">L+OUT</text>
 <text x="0.635" y="-2.794" size="1.016" layer="21">R+OUT</text>
+<text x="-10.16" y="14.478" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
 </package>
 <package name="ASM_ADAFRUIT_INA169_MOUNTING_HOLES">
 <pad name="1" x="-5.08" y="-8.89" drill="1" diameter="1.778" shape="square"/>
@@ -1330,19 +1364,19 @@ design rules under a new name.</description>
 </autorouter>
 <elements>
 <element name="ASM-3" library="MG-Eagle_v1" package="ASM_ADAFRUIT_FEATHER_BLUEFRUIT" value="Feather Bluefruit 32u4" x="46.99" y="52.07" smashed="yes" rot="R180">
-<attribute name="NAME" x="57.15" y="22.86" size="1.27" layer="25" ratio="12" rot="R180" align="top-left"/>
-<attribute name="VALUE" x="57.15" y="77.47" size="0.8128" layer="27" ratio="7" rot="SR180" align="top-left"/>
+<attribute name="NAME" x="55.626" y="76.8096" size="1.27" layer="25" ratio="10" rot="R180" align="top-left"/>
 </element>
 <element name="ASM-4" library="MG-Eagle_v1" package="ASM_ADAFRUIT_SOUND_FX_BOARD" value="" x="15.621" y="38.227" smashed="yes" rot="R90">
 <attribute name="NAME" x="1.221" y="15.227" size="1.27" layer="25" ratio="10" rot="R90" align="top-left"/>
 </element>
-<element name="ASM-1" library="MG-Eagle_v1" package="ASM_ADAFRUIT_MAX98306_AMP_MOUNTING_HOLES" value="" x="13.97" y="78.74" smashed="yes" rot="R180"/>
+<element name="ASM-1" library="MG-Eagle_v1" package="ASM_ADAFRUIT_MAX98306_AMP_MOUNTING_HOLES" value="" x="13.97" y="78.74" smashed="yes" rot="R180">
+<attribute name="NAME" x="18.2372" y="93.3196" size="1.27" layer="25" font="vector" ratio="10"/>
+</element>
 <element name="ASM-2" library="MG-Eagle_v1" package="ASM_ADAFRUIT_INA169_MOUNTING_HOLES" value="" x="77.47" y="67.31" smashed="yes" rot="R270">
-<attribute name="NAME" x="87.63" y="78.74" size="1.27" layer="25" ratio="10" rot="R270"/>
+<attribute name="NAME" x="78.5368" y="79.4004" size="1.27" layer="25" ratio="10"/>
 </element>
 <element name="C1" library="MG-Eagle_v1" package="CAP_E-035X080" value="100uF, 50V" x="73.66" y="85.09" smashed="yes" rot="R270">
-<attribute name="NAME" x="78.4225" y="87.63" size="1.27" layer="25" ratio="10" rot="R270"/>
-<attribute name="VALUE" x="68.2625" y="87.503" size="0.8128" layer="27" ratio="7" rot="SR270"/>
+<attribute name="NAME" x="69.342" y="79.9465" size="1.27" layer="25" ratio="10"/>
 </element>
 <element name="C2" library="MG-Eagle_v1" package="CAP_E-035X080" value="100uF, 50V" x="35.56" y="16.51" smashed="yes">
 <attribute name="NAME" x="33.02" y="21.2725" size="1.27" layer="25" ratio="10"/>
@@ -1353,8 +1387,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="62.23" y="30.861" size="0.8128" layer="21" ratio="7" rot="R270"/>
 </element>
 <element name="J3" library="MG-Eagle_v1" package="JST-2-PTH-VERT_XH" value="B2B-XH-AM(LF)(SN)" x="53.34" y="92.71" smashed="yes" rot="R270">
-<attribute name="NAME" x="49.435" y="95.948" size="1.016" layer="25" ratio="10" rot="R270" align="top-left"/>
-<attribute name="VALUE" x="48.036" y="95.926" size="0.8128" layer="27" ratio="7" rot="SR270" align="top-left"/>
+<attribute name="NAME" x="47.9176" y="96.0694" size="1.016" layer="25" align="top-left"/>
 </element>
 <element name="J17" library="MG-Eagle_v1" package="1X04" value="" x="41.91" y="21.59" smashed="yes">
 <attribute name="NAME" x="40.5638" y="23.4188" size="1.27" layer="25" ratio="10"/>
@@ -1372,7 +1405,6 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="83.82" y="18.415" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="J10" library="MG-Eagle_v1" package="1X03_NO_SILK" value="" x="91.44" y="44.45" smashed="yes">
-<attribute name="NAME" x="90.0938" y="46.2788" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="90.17" y="41.275" size="1.27" layer="27"/>
 </element>
 <element name="J23" library="MG-Eagle_v1" package="1X03_NO_SILK" value="" x="91.44" y="15.24" smashed="yes">
@@ -1388,28 +1420,24 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="62.865" y="39.37" size="1.27" layer="27" rot="R270"/>
 </element>
 <element name="J6" library="MG-Eagle_v1" package="TE_1217861-1" value="" x="93.98" y="74.93" smashed="yes" rot="R180">
-<attribute name="NAME" x="98.78106875" y="77.58216875" size="1.27" layer="25" font="vector" ratio="10" rot="R270"/>
+<attribute name="NAME" x="96.45863125" y="71.65386875" size="1.27" layer="25" font="vector" ratio="10"/>
 <attribute name="VALUE" x="89.136209375" y="77.38815" size="1.016" layer="27" font="vector" rot="R270" align="top-left"/>
 </element>
 <element name="J8" library="MG-Eagle_v1" package="TE_1217861-1" value="" x="93.98" y="67.31" smashed="yes">
-<attribute name="NAME" x="89.17893125" y="64.65783125" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
+<attribute name="NAME" x="96.35703125" y="64.13546875" size="1.27" layer="25" font="vector" ratio="10"/>
 <attribute name="VALUE" x="98.823790625" y="64.85185" size="1.016" layer="27" font="vector" rot="R90" align="top-left"/>
 </element>
 <element name="J7" library="MG-Eagle_v1" package="1X05_NO_SILK" value="" x="66.04" y="62.23" smashed="yes" rot="R90">
-<attribute name="NAME" x="64.2112" y="60.8838" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="69.215" y="60.96" size="1.27" layer="27" rot="R90"/>
 </element>
 <element name="J2" library="MG-Eagle_v1" package="2X3-SHROUDED" value="75869-131LF" x="36.83" y="91.44" smashed="yes">
-<attribute name="NAME" x="29.259" y="97.858" size="1.27" layer="25" ratio="10" align="top-left"/>
+<attribute name="NAME" x="26.8206" y="96.0292" size="1.016" layer="25" align="top-left"/>
 <attribute name="PROD_ID" value="CONN-10681" x="114.3" y="-26.67" size="1.778" layer="27" display="off"/>
-<attribute name="VALUE" x="36.909" y="86.214" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0" align="top-left"/>
 </element>
 <element name="J4" library="MG-Eagle_v1" package="1X02_NO_SILK" value="" x="58.42" y="93.98" smashed="yes" rot="R270">
-<attribute name="NAME" x="60.2488" y="95.3262" size="1.27" layer="25" ratio="10" rot="R270"/>
 <attribute name="VALUE" x="55.245" y="95.25" size="1.27" layer="27" rot="R270"/>
 </element>
 <element name="J1" library="MG-Eagle_v1" package="1X06_NO_SILK" value="" x="30.48" y="85.09" smashed="yes">
-<attribute name="NAME" x="29.1338" y="86.9188" size="1.27" layer="25" ratio="10"/>
 <attribute name="PROD_ID" value="CONN-08437" x="76.2" y="-67.31" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="29.21" y="81.915" size="1.27" layer="27"/>
 </element>
@@ -1424,11 +1452,9 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="31.829" y="1.124" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0" align="top-left"/>
 </element>
 <element name="J13" library="MG-Eagle_v1" package="1X16_NO_SILK" value="" x="59.69" y="31.75" smashed="yes" rot="R90">
-<attribute name="NAME" x="57.8612" y="30.4038" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="62.865" y="30.48" size="1.27" layer="27" rot="R90"/>
 </element>
 <element name="J12" library="MG-Eagle_v1" package="1X12_NO_SILK" value="" x="34.29" y="41.91" smashed="yes" rot="R90">
-<attribute name="NAME" x="32.4612" y="40.5638" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="37.465" y="40.64" size="1.27" layer="27" rot="R90"/>
 </element>
 <element name="J16" library="MG-Eagle_v1" package="1X14_NO_SILK" value="" x="27.94" y="22.86" smashed="yes" rot="R90">
@@ -1440,33 +1466,20 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="5.715" y="21.59" size="1.27" layer="27" rot="R90"/>
 </element>
 <element name="J5" library="MG-Eagle_v1" package="1X07_NO_SILK" value="" x="26.67" y="83.82" smashed="yes" rot="R270">
-<attribute name="NAME" x="28.4988" y="85.1662" size="1.27" layer="25" ratio="10" rot="R270"/>
 <attribute name="VALUE" x="23.495" y="85.09" size="1.27" layer="27" rot="R270"/>
 </element>
-<element name="JP4" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="33.02" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="31.75" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
-<element name="JP5" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="35.56" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="34.29" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
-<element name="JP6" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="38.1" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="36.83" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
-<element name="JP7" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="40.64" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="39.37" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
-<element name="JP8" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="43.18" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="41.91" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
+<element name="JP4" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="33.02" y="82.55" smashed="yes" rot="R90"/>
+<element name="JP5" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="35.56" y="82.55" smashed="yes" rot="R90"/>
+<element name="JP6" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="38.1" y="82.55" smashed="yes" rot="R90"/>
+<element name="JP7" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="40.64" y="82.55" smashed="yes" rot="R90"/>
+<element name="JP8" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="43.18" y="82.55" smashed="yes" rot="R90"/>
 <element name="JP2" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="17.8816" y="78.5368" smashed="yes">
 <attribute name="NAME" x="16.9291" y="79.8068" size="0.8128" layer="25" ratio="10"/>
 </element>
 <element name="JP1" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="17.8816" y="81.1784" smashed="yes">
 <attribute name="NAME" x="16.9291" y="82.4484" size="0.8128" layer="25" ratio="10"/>
 </element>
-<element name="JP3" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="30.48" y="82.55" smashed="yes" rot="R90">
-<attribute name="NAME" x="29.21" y="81.5975" size="0.8128" layer="25" ratio="10" rot="R90"/>
-</element>
+<element name="JP3" library="MG-Eagle_v1" package="PAD-JUMPER-2-NC_BY_TRACE_YES_SILK" value="CON_JUMPER_PAD-2-NC_BY_TRACE" x="30.48" y="82.55" smashed="yes" rot="R90"/>
 <element name="K1" library="MG-Eagle_v1" package="RELAY_TE_7-1393239-7" value="7-1393239-7" x="82.55" y="36.83" smashed="yes">
 <attribute name="NAME" x="67.6789" y="44.235559375" size="1.2701" layer="25" ratio="10"/>
 <attribute name="VALUE" x="67.6052" y="28.436090625" size="0.8128" layer="27" ratio="7" rot="SR0"/>
@@ -1485,59 +1498,56 @@ design rules under a new name.</description>
 <element name="MH2" library="MG-Eagle_v1" package="TOOLING_HOLE_0.125_IN_HORSESHOE" value="" x="95.25" y="95.25" smashed="yes"/>
 <element name="MH4" library="MG-Eagle_v1" package="TOOLING_HOLE_0.125_IN_HORSESHOE" value="" x="95.25" y="3.81" smashed="yes"/>
 <element name="Q2" library="MG-Eagle_v1" package="TO-220-VERTICAL" value="IRLB8721PBF" x="81.28" y="49.53" smashed="yes" rot="R270">
-<attribute name="NAME" x="84.709" y="52.324" size="1.27" layer="25" font="vector" ratio="10" rot="R270"/>
+<attribute name="NAME" x="85.979" y="44.6024" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
 <attribute name="PROD_ID" value="TRANS-10060" x="-49.53" y="-20.32" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="VALUE" x="77.978" y="52.832" size="0.8128" layer="27" font="vector" ratio="7" rot="SR270"/>
 </element>
 <element name="Q1" library="MG-Eagle_v1" package="TO-220-VERTICAL" value="IRLB8721PBF" x="64.77" y="86.36" smashed="yes" rot="R90">
-<attribute name="NAME" x="61.341" y="83.566" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
+<attribute name="NAME" x="63.9572" y="80.8482" size="1.27" layer="25" font="vector" ratio="10" rot="R180"/>
 <attribute name="PROD_ID" value="TRANS-10060" x="195.58" y="168.91" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="68.072" y="83.058" size="0.8128" layer="27" font="vector" ratio="7" rot="SR90"/>
 </element>
 <element name="R7" library="MG-Eagle_v1" package="AXIAL-0.4" value="1k" x="50.8" y="46.99" smashed="yes" rot="R90">
-<attribute name="NAME" x="48.895" y="43.815" size="0.8128" layer="25" font="vector" rot="R90"/>
+<attribute name="NAME" x="48.895" y="43.815" size="1.016" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="51.181" y="44.704" size="0.8128" layer="27" font="vector" ratio="7" rot="SR90"/>
 </element>
 <element name="R6" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="45.72" y="46.99" smashed="yes" rot="R270">
-<attribute name="NAME" x="47.625" y="50.165" size="0.8128" layer="25" font="vector" rot="R270"/>
+<attribute name="NAME" x="47.625" y="50.165" size="1.016" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="45.339" y="49.276" size="0.8128" layer="27" font="vector" ratio="7" rot="SR270"/>
 </element>
 <element name="R8" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="72.39" y="53.34" smashed="yes">
-<attribute name="NAME" x="69.215" y="55.245" size="0.8128" layer="25" font="vector"/>
-<attribute name="VALUE" x="70.104" y="52.959" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
+<attribute name="NAME" x="67.3862" y="54.6354" size="1.016" layer="25" font="vector"/>
+<attribute name="VALUE" x="71.3232" y="52.959" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R9" library="MG-Eagle_v1" package="AXIAL-0.4" value="10k" x="72.39" y="49.53" smashed="yes" rot="R180">
-<attribute name="NAME" x="75.565" y="47.625" size="0.8128" layer="25" font="vector" rot="R180"/>
-<attribute name="VALUE" x="74.676" y="49.911" size="0.8128" layer="27" font="vector" ratio="7" rot="SR180"/>
+<attribute name="NAME" x="67.3862" y="50.8254" size="1.016" layer="25" font="vector"/>
+<attribute name="VALUE" x="71.628" y="49.149" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R10" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="72.39" y="45.72" smashed="yes" rot="R180">
-<attribute name="NAME" x="75.565" y="43.815" size="0.8128" layer="25" font="vector" rot="R180"/>
-<attribute name="VALUE" x="74.676" y="46.101" size="0.8128" layer="27" font="vector" ratio="7" rot="SR180"/>
+<attribute name="NAME" x="67.3862" y="47.0154" size="1.016" layer="25" font="vector"/>
+<attribute name="VALUE" x="71.3232" y="45.339" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R3" library="MG-Eagle_v1" package="AXIAL-0.4" value="220" x="73.66" y="91.44" smashed="yes" rot="R180">
-<attribute name="NAME" x="76.835" y="89.535" size="0.8128" layer="25" font="vector" rot="R180"/>
-<attribute name="VALUE" x="75.946" y="91.821" size="0.8128" layer="27" font="vector" ratio="7" rot="SR180"/>
+<attribute name="NAME" x="70.4342" y="89.8398" size="1.016" layer="25" font="vector" rot="R180"/>
+<attribute name="VALUE" x="72.4916" y="91.059" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R2" library="MG-Eagle_v1" package="AXIAL-0.4" value="4k, 1%" x="73.66" y="95.25" smashed="yes">
-<attribute name="NAME" x="70.485" y="97.155" size="0.8128" layer="25" font="vector"/>
-<attribute name="VALUE" x="71.374" y="94.869" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
+<attribute name="NAME" x="68.961" y="96.8502" size="1.016" layer="25" font="vector"/>
+<attribute name="VALUE" x="71.9836" y="94.869" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R1" library="MG-Eagle_v1" package="AXIAL-0.4" value="10k" x="53.34" y="86.36" smashed="yes" rot="R180">
-<attribute name="NAME" x="56.515" y="84.455" size="0.8128" layer="25" font="vector" rot="R180"/>
-<attribute name="VALUE" x="55.626" y="86.741" size="0.8128" layer="27" font="vector" ratio="7" rot="SR180"/>
+<attribute name="NAME" x="57.7342" y="89.027" size="1.016" layer="25" font="vector" rot="R180"/>
+<attribute name="VALUE" x="52.2732" y="86.0806" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R4" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="53.34" y="82.55" smashed="yes">
-<attribute name="NAME" x="50.165" y="84.455" size="0.8128" layer="25" font="vector"/>
-<attribute name="VALUE" x="51.054" y="82.169" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
+<attribute name="NAME" x="56.261" y="79.883" size="1.016" layer="25" font="vector"/>
+<attribute name="VALUE" x="51.9684" y="82.169" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="R5" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="40.64" y="46.99" smashed="yes" rot="R90">
-<attribute name="NAME" x="38.735" y="43.815" size="0.8128" layer="25" font="vector" rot="R90"/>
+<attribute name="NAME" x="38.735" y="43.815" size="1.016" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="41.021" y="44.704" size="0.8128" layer="27" font="vector" ratio="7" rot="SR90"/>
 </element>
 <element name="THM-1" library="MG-Eagle_v1" package="SK95-2M3" package3d_urn="urn:adsk.eagle:package:14183/1" value="V5629W220" x="86.36" y="87.63" smashed="yes" rot="R270">
-<attribute name="NAME" x="92.075" y="93.98" size="1.27" layer="25" ratio="10" rot="R270"/>
+<attribute name="NAME" x="93.5482" y="84.6328" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="POPULARITY" value="0" x="-41.91" y="31.75" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="VALUE" x="92.075" y="87.63" size="0.8128" layer="27" ratio="7" rot="SR270"/>
 </element>
 <element name="U1" library="MG-Eagle_v1" package="DIP787W45P254L3556H508Q28" value="MCP23017-E/SP" x="15.24" y="31.75" smashed="yes">
 <attribute name="DESCRIPTION" value=" MCP23017 Series 5.5 V 1.7 MHz SMT 16-Bit I2C I/O Expander - SPDIP-28 " x="67.31" y="10.16" size="1.778" layer="27" display="off"/>
@@ -1554,15 +1564,15 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="82.55" y="13.78" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="VRG-1" library="MG-Eagle_v1" package="TO-220-VERTICAL" value="LM317" x="82.55" y="87.63" smashed="yes" rot="R270">
-<attribute name="NAME" x="85.979" y="90.424" size="1.27" layer="25" font="vector" ratio="10" rot="R270"/>
-<attribute name="VALUE" x="79.248" y="90.932" size="0.8128" layer="27" font="vector" ratio="7" rot="SR270"/>
+<attribute name="NAME" x="81.1784" y="95.7326" size="1.27" layer="25" font="vector" ratio="10"/>
+<attribute name="VALUE" x="81.28" y="94.488" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 <element name="J9" library="MG-Eagle_v1" package="TE_1217861-1" value="" x="93.98" y="57.15" smashed="yes">
-<attribute name="NAME" x="89.17893125" y="54.49783125" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
+<attribute name="NAME" x="97.90216875" y="55.04133125" size="1.27" layer="25" font="vector" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="98.823790625" y="54.69185" size="1.016" layer="27" font="vector" rot="R90" align="top-left"/>
 </element>
 <element name="J11" library="MG-Eagle_v1" package="TE_1217861-1" value="" x="93.98" y="49.53" smashed="yes">
-<attribute name="NAME" x="89.17893125" y="46.87783125" size="1.27" layer="25" font="vector" ratio="10" rot="R90"/>
+<attribute name="NAME" x="98.20696875" y="47.42133125" size="1.27" layer="25" font="vector" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="98.823790625" y="47.07185" size="1.016" layer="27" font="vector" rot="R90" align="top-left"/>
 </element>
 <element name="LED2" library="MG-Eagle_v1" package="LED3MM" value="3mm Green" x="44.45" y="16.51" smashed="yes" rot="R180">
@@ -1571,7 +1581,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="41.795" y="17.961" size="0.8128" layer="27" ratio="7" rot="SR180"/>
 </element>
 <element name="R11" library="MG-Eagle_v1" package="AXIAL-0.4" value="100" x="54.61" y="16.51" smashed="yes">
-<attribute name="NAME" x="51.435" y="18.415" size="0.8128" layer="25" font="vector"/>
+<attribute name="NAME" x="51.435" y="18.415" size="1.016" layer="25" font="vector"/>
 <attribute name="VALUE" x="52.324" y="16.129" size="0.8128" layer="27" font="vector" ratio="7" rot="SR0"/>
 </element>
 </elements>
@@ -1851,7 +1861,7 @@ design rules under a new name.</description>
 <wire x1="17.3736" y1="78.5368" x2="15.9512" y2="78.5368" width="0.1524" layer="1"/>
 <wire x1="15.9512" y1="78.5368" x2="15.8496" y2="78.6384" width="0.1524" layer="1"/>
 <contactref element="R11" pad="P$2"/>
-<wire x1="91.4019" y1="49.53" x2="96.5581" y2="49.53" width="0" layer="19" extent="1-1"/>
+<wire x1="96.5581" y1="49.53" x2="91.4019" y2="49.53" width="0.1524" layer="1"/>
 </signal>
 <signal name="5V">
 <contactref element="ASM-3" pad="USB/VBUS"/>
