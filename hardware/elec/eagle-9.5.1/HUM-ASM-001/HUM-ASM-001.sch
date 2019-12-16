@@ -1311,14 +1311,14 @@ Keying posts into board</description>
 <wire x1="11.43" y1="-8.89" x2="8.89" y2="-11.43" width="0.1524" layer="21" curve="-90"/>
 <wire x1="8.89" y1="-11.43" x2="-8.89" y2="-11.43" width="0.1524" layer="21"/>
 <wire x1="-8.89" y1="-11.43" x2="-11.43" y2="-8.89" width="0.1524" layer="21" curve="-90"/>
-<text x="-5.695" y="9.044" size="1.27" layer="21" ratio="18" rot="R270">Vin-</text>
-<text x="4.438" y="9.06" size="1.27" layer="21" ratio="18" rot="R270">Vin+</text>
-<text x="-8.89" y="-3.81" size="1.27" layer="21" ratio="18" rot="R90">INA169</text>
-<text x="-4.572" y="-7.747" size="1.016" layer="21" ratio="18" rot="R90">VCC</text>
-<text x="-2.159" y="-7.62" size="1.016" layer="21" ratio="18" rot="R90">GND</text>
-<text x="0.508" y="-7.747" size="1.016" layer="21" ratio="18" rot="R90">VIN-</text>
-<text x="2.921" y="-7.747" size="1.016" layer="21" ratio="18" rot="R90">VIN+</text>
-<text x="5.588" y="-7.747" size="1.016" layer="21" ratio="18" rot="R90">OUT</text>
+<text x="-5.695" y="9.044" size="1.016" layer="21" rot="R270">Vin-</text>
+<text x="4.438" y="9.06" size="1.016" layer="21" rot="R270">Vin+</text>
+<text x="-8.89" y="-3.81" size="1.27" layer="21" rot="R90">INA169</text>
+<text x="-4.572" y="-7.747" size="1.016" layer="21" rot="R90">VCC</text>
+<text x="-2.159" y="-7.62" size="1.016" layer="21" rot="R90">GND</text>
+<text x="0.508" y="-7.747" size="1.016" layer="21" rot="R90">VIN-</text>
+<text x="2.921" y="-7.747" size="1.016" layer="21" rot="R90">VIN+</text>
+<text x="5.588" y="-7.747" size="1.016" layer="21" rot="R90">OUT</text>
 <circle x="-8.89" y="-8.89" radius="1.999996875" width="0.2032" layer="21"/>
 <circle x="-8.89" y="7" radius="1.999996875" width="0.2032" layer="21"/>
 <circle x="8.89" y="7" radius="1.999996875" width="0.2032" layer="21"/>
@@ -1943,35 +1943,34 @@ High-power, low thermal resistance package.</description>
 <wire x1="23.99" y1="9.955" x2="22.085" y2="11.86" width="0.1524" layer="21" curve="90"/>
 <wire x1="22.085" y1="11.86" x2="-21.095" y2="11.86" width="0.1524" layer="21"/>
 <wire x1="-21.095" y1="11.86" x2="-23" y2="9.955" width="0.1524" layer="21" curve="90"/>
-<text x="-11.062" y="-7.063" size="1.27" layer="21" font="vector" ratio="12" rot="R270">1</text>
-<text x="-7.887" y="-7.698" size="1.27" layer="21" font="vector" ratio="12" rot="R90" align="center">2</text>
-<text x="-5.22" y="-7.698" size="1.27" layer="21" font="vector" ratio="12" rot="R90" align="center">3</text>
-<text x="-2.68" y="-7.698" size="1.27" layer="21" font="vector" ratio="12" rot="R90" align="center">4</text>
-<text x="-0.14" y="-8.206" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">5</text>
-<text x="2.4" y="-8.206" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">6</text>
-<text x="4.94" y="-8.206" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">7</text>
-<text x="7.48" y="-8.206" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">8</text>
-<text x="10.02" y="-8.206" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">9</text>
-<text x="12.525" y="-8.229" size="1.27" layer="21" font="vector" ratio="12" rot="R270" align="center-right">10</text>
-<text x="-12.84" y="-7.063" size="1.27" layer="21" font="vector" ratio="12" rot="R90" align="center-right">0</text>
-<text x="-15.352" y="-5.66" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="center-right">Rst</text>
-<text x="15.048" y="-5.88" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="center-right">Act</text>
-<text x="17.648" y="-8.245" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center-right">Gnd</text>
-<text x="-15.634" y="9.193" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="center-right">Vin</text>
-<text x="-12.915" y="9.013" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="center-right">Gnd</text>
-<text x="-10.173" y="8.05" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">BUS</text>
-<text x="-7.558" y="8.24" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">PB</text>
-<text x="-5.258" y="8.23" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">TX</text>
-<text x="-2.808" y="8.37" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">RX</text>
-<text x="4.865" y="7.517" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">Vol-</text>
-<text x="-0.408" y="8.21" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">UG</text>
-<text x="7.442" y="8.099" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">CS</text>
-<text x="9.992" y="7.07" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">R-GND</text>
-<text x="12.542" y="7.16" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">R+OUT</text>
-<text x="15.142" y="7.1" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">L+OUT</text>
-<text x="17.642" y="7.04" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">L-GND</text>
-<text x="-15.38" y="-0.459" size="1.27" layer="21" font="vector" ratio="12">Adafruit Sound FX Board</text>
-<text x="2.315" y="7.527" size="1.016" layer="21" font="vector" ratio="12" rot="R270" align="center">Vol+</text>
+<text x="-11.062" y="-7.063" size="1.016" layer="21" font="vector" rot="R270">1</text>
+<text x="-7.887" y="-7.698" size="1.016" layer="21" font="vector" rot="R90" align="center">2</text>
+<text x="-5.22" y="-7.698" size="1.016" layer="21" font="vector" rot="R90" align="center">3</text>
+<text x="-2.68" y="-7.698" size="1.016" layer="21" font="vector" rot="R90" align="center">4</text>
+<text x="-0.14" y="-8.206" size="1.016" layer="21" font="vector" rot="R270" align="center-right">5</text>
+<text x="2.4" y="-8.206" size="1.016" layer="21" font="vector" rot="R270" align="center-right">6</text>
+<text x="4.94" y="-8.206" size="1.016" layer="21" font="vector" rot="R270" align="center-right">7</text>
+<text x="7.48" y="-8.206" size="1.016" layer="21" font="vector" rot="R270" align="center-right">8</text>
+<text x="10.02" y="-8.206" size="1.016" layer="21" font="vector" rot="R270" align="center-right">9</text>
+<text x="12.525" y="-8.229" size="1.016" layer="21" font="vector" rot="R270" align="center-right">10</text>
+<text x="-12.84" y="-7.063" size="1.016" layer="21" font="vector" rot="R90" align="center-right">0</text>
+<text x="-15.352" y="-5.66" size="1.016" layer="21" font="vector" rot="R90" align="center-right">Rst</text>
+<text x="15.048" y="-5.88" size="1.016" layer="21" font="vector" rot="R90" align="center-right">Act</text>
+<text x="17.648" y="-8.245" size="1.016" layer="21" font="vector" rot="R270" align="center-right">Gnd</text>
+<text x="-15.634" y="9.193" size="1.016" layer="21" font="vector" rot="R90" align="center-right">Vin</text>
+<text x="-12.915" y="9.013" size="1.016" layer="21" font="vector" rot="R90" align="center-right">Gnd</text>
+<text x="-10.173" y="8.05" size="1.016" layer="21" font="vector" rot="R270" align="center">BUS</text>
+<text x="-7.558" y="8.24" size="1.016" layer="21" font="vector" rot="R270" align="center">PB</text>
+<text x="-5.258" y="8.23" size="1.016" layer="21" font="vector" rot="R270" align="center">TX</text>
+<text x="-2.808" y="8.37" size="1.016" layer="21" font="vector" rot="R270" align="center">RX</text>
+<text x="4.865" y="7.517" size="1.016" layer="21" font="vector" rot="R270" align="center">Vol-</text>
+<text x="-0.408" y="8.21" size="1.016" layer="21" font="vector" rot="R270" align="center">UG</text>
+<text x="7.442" y="8.099" size="1.016" layer="21" font="vector" rot="R270" align="center">CS</text>
+<text x="9.992" y="7.07" size="1.016" layer="21" font="vector" rot="R270" align="center">R-GND</text>
+<text x="12.542" y="7.16" size="1.016" layer="21" font="vector" rot="R270" align="center">R+OUT</text>
+<text x="15.142" y="7.1" size="1.016" layer="21" font="vector" rot="R270" align="center">L+OUT</text>
+<text x="17.642" y="7.04" size="1.016" layer="21" font="vector" rot="R270" align="center">L-GND</text>
+<text x="2.315" y="7.527" size="1.016" layer="21" font="vector" rot="R270" align="center">Vol+</text>
 <wire x1="-17.158" y1="-3.634" x2="-17.158" y2="3.986" width="0.1524" layer="21"/>
 <wire x1="-17.158" y1="3.986" x2="-23.508" y2="3.986" width="0.1524" layer="21"/>
 <wire x1="-23.508" y1="3.986" x2="-23.508" y2="-3.634" width="0.1524" layer="21"/>
@@ -2607,21 +2606,23 @@ Basic SMA packaged diode. Good for reverse polarization protection. Common part 
 <text x="0.254" y="1.651" size="0.4064" layer="27">&gt;VALUE</text>
 </package>
 <package name="DIODE-1N4001">
-<wire x1="3.175" y1="1.27" x2="1.905" y2="1.27" width="0.254" layer="21"/>
-<wire x1="1.905" y1="1.27" x2="-3.175" y2="1.27" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="1.27" x2="-3.175" y2="0" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="0" x2="-3.175" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="-1.27" x2="1.905" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="1.905" y1="-1.27" x2="3.175" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="3.175" y1="-1.27" x2="3.175" y2="0" width="0.254" layer="21"/>
-<wire x1="3.175" y1="0" x2="3.175" y2="1.27" width="0.254" layer="21"/>
-<wire x1="1.905" y1="1.27" x2="1.905" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="0" x2="-3.81" y2="0" width="0.254" layer="21"/>
-<wire x1="3.175" y1="0" x2="3.81" y2="0" width="0.254" layer="21"/>
+<wire x1="3.175" y1="1.27" x2="1.905" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="1.27" x2="-3.175" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="1.27" x2="-3.175" y2="0" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="0" x2="-3.175" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="-1.27" x2="1.905" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-1.27" x2="3.175" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="3.175" y1="-1.27" x2="3.175" y2="0" width="0.1524" layer="21"/>
+<wire x1="3.175" y1="0" x2="3.175" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="1.27" x2="1.905" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="0" x2="-3.81" y2="0" width="0.1524" layer="21"/>
+<wire x1="3.175" y1="0" x2="3.81" y2="0" width="0.1524" layer="21"/>
 <pad name="A" x="-5.08" y="0" drill="1" diameter="1.9812"/>
 <pad name="C" x="5.08" y="0" drill="1" diameter="1.9812"/>
-<text x="-2.921" y="1.651" size="0.6096" layer="25">&gt;Name</text>
-<text x="-2.921" y="-0.508" size="1.016" layer="21" ratio="12">&gt;Value</text>
+<text x="-2.921" y="1.651" size="1.016" layer="25" ratio="10">&gt;Name</text>
+<text x="-2.921" y="-2.54" size="1.016" layer="21">&gt;Value</text>
+<wire x1="1.905" y1="1.27" x2="1.905" y2="1.651" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-1.27" x2="1.905" y2="-1.651" width="0.1524" layer="21"/>
 </package>
 <package name="SOD-323">
 <wire x1="-0.9" y1="0.65" x2="-0.5" y2="0.65" width="0.2032" layer="21"/>
@@ -8969,8 +8970,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="U$25" library="MG-Eagle_v1" deviceset="V48" device=""/>
 <part name="U$26" library="MG-Eagle_v1" deviceset="V48" device=""/>
 <part name="U$27" library="MG-Eagle_v1" deviceset="V5.0" device=""/>
-<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="NO_SILK_ALL_ROUND"/>
-<part name="J11" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="NO_SILK_ALL_ROUND"/>
+<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="PTH"/>
+<part name="J11" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="PTH"/>
 <part name="J12" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="NO_SILK_ALL_ROUND"/>
 <part name="U$28" library="MG-Eagle_v1" deviceset="V0_GND" device=""/>
 <part name="J13" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="1X03_NO_SILK"/>
