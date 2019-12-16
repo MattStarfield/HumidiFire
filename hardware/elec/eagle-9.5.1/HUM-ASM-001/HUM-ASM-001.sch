@@ -2037,7 +2037,7 @@ High-power, low thermal resistance package.</description>
 <text x="-7.493" y="4.572" size="1.016" layer="21">!SHTDWN</text>
 <text x="-7.493" y="7.239" size="1.016" layer="21">GND</text>
 <text x="-7.493" y="9.906" size="1.016" layer="21">VCC</text>
-<text x="-6.6548" y="11.9888" size="1.27" layer="21" ratio="10">MAX98306 Amp</text>
+<text x="-6.6548" y="11.9888" size="1.27" layer="21">MAX98306 Amp</text>
 <wire x1="-8.763" y1="-13.97" x2="-11.303" y2="-11.43" width="0.1524" layer="21" curve="-90"/>
 <wire x1="-11.303" y1="-11.43" x2="-11.303" y2="11.43" width="0.1524" layer="21"/>
 <wire x1="-11.303" y1="11.43" x2="-8.763" y2="13.97" width="0.1524" layer="21" curve="-90"/>
@@ -2105,6 +2105,7 @@ High-power, low thermal resistance package.</description>
 <pad name="15" x="8.382" y="-5.8166" drill="1.1938" diameter="2.286"/>
 <text x="0.635" y="1.397" size="1.016" layer="21">L+OUT</text>
 <text x="0.635" y="-2.794" size="1.016" layer="21">R+OUT</text>
+<text x="-10.16" y="14.478" size="1.27" layer="25" font="vector" ratio="10">&gt;NAME</text>
 </package>
 <package name="1X14_NO_SILK">
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
@@ -6084,7 +6085,7 @@ Current Monitor</text>
 <gate name="G$1" symbol="M03X2" x="0" y="0"/>
 </gates>
 <devices>
-<device name="SHROUD" package="2X3-SHROUDED">
+<device name="-SHROUD" package="2X3-SHROUDED">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -8909,7 +8910,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <attribute name="DESIGNER" value="Matt Garfield"/>
 </part>
 <part name="ASM-3" library="MG-Eagle_v1" deviceset="ASM_ADAFRUIT_FEATHER_BLUEFRUIT" device="" value="Feather Bluefruit 32u4"/>
-<part name="J2" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
+<part name="J2" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
 <part name="U1" library="MG-Eagle_v1" deviceset="IIC_MCP23017-E/SP" device="" value="MCP23017-E/SP"/>
 <part name="FRAME4" library="MG-Eagle_v1" deviceset="SCH_FRAME_LETTER_8.5X11" device="">
 <attribute name="CNAME" value="HumidiFire"/>
@@ -8974,8 +8975,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="J18" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="PTH"/>
 <part name="J22" library="MG-Eagle_v1" deviceset="CON_HEADER_1X4" device="NO_SILK_ALL_ROUND"/>
 <part name="U$28" library="MG-Eagle_v1" deviceset="V0_GND" device=""/>
-<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="1X03_NO_SILK"/>
-<part name="J23" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="1X03_NO_SILK"/>
+<part name="J10" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="PTH"/>
+<part name="J23" library="MG-Eagle_v1" deviceset="CON_HEADER_1X3" device="PTH"/>
 <part name="J19" library="MG-Eagle_v1" deviceset="CON_HEADER_1X2" device="1X02_NO_SILK"/>
 <part name="J14" library="MG-Eagle_v1" deviceset="CON_HEADER_1X2" device="1X02_NO_SILK"/>
 <part name="J6" library="MG-Eagle_v1" deviceset="CON_HEADER_1X1" device="-QC_TAB_121786-1"/>
@@ -9003,8 +9004,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="JP8" library="MG-Eagle_v1" deviceset="CON_JUMPER_PAD-2-NC_BY_TRACE" device=""/>
 <part name="R5" library="MG-Eagle_v1" deviceset="RES_RESISTOR" device="-PTH-1/4W" value="100"/>
 <part name="R6" library="MG-Eagle_v1" deviceset="RES_RESISTOR" device="-PTH-1/4W" value="100"/>
-<part name="J20" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
-<part name="J21" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="SHROUD" value="75869-131LF"/>
+<part name="J20" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
+<part name="J21" library="MG-Eagle_v1" deviceset="CON_HEADER_2X3" device="-SHROUD" value="75869-131LF"/>
 <part name="C2" library="MG-Eagle_v1" deviceset="CAP_THT_POL" device="-E-035X080MM" value="100uF, 50V"/>
 <part name="U$36" library="MG-Eagle_v1" deviceset="V0_GND" device=""/>
 <part name="U$37" library="MG-Eagle_v1" deviceset="V5.0" device=""/>
@@ -9907,15 +9908,15 @@ the large DC current draw</text>
 <attribute name="VALUE" x="184.658" y="-123.444" size="1.27" layer="96" font="vector" ratio="12" rot="MR180" align="top-center"/>
 <attribute name="NAME" x="180.34" y="-130.302" size="1.778" layer="95" font="vector" rot="MR180"/>
 </instance>
-<instance part="LED2" gate="G$1" x="205.74" y="-99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="209.804" y="-95.631" size="1.778" layer="95" font="vector" rot="R180"/>
-<attribute name="VALUE" x="212.344" y="-104.902" size="1.27" layer="96" font="vector" ratio="12" rot="R180" align="top-left"/>
+<instance part="LED2" gate="G$1" x="220.98" y="-99.06" smashed="yes">
+<attribute name="NAME" x="216.916" y="-102.489" size="1.778" layer="95" font="vector"/>
+<attribute name="VALUE" x="216.916" y="-103.378" size="1.27" layer="96" font="vector" ratio="12" align="top-left"/>
 </instance>
-<instance part="R11" gate="G$1" x="218.44" y="-99.06" smashed="yes">
-<attribute name="NAME" x="221.488" y="-98.806" size="1.778" layer="95" font="vector"/>
-<attribute name="VALUE" x="218.44" y="-99.06" size="1.143" layer="96" font="vector" ratio="10" align="center"/>
+<instance part="R11" gate="G$1" x="208.28" y="-99.06" smashed="yes">
+<attribute name="NAME" x="211.328" y="-98.806" size="1.778" layer="95" font="vector"/>
+<attribute name="VALUE" x="208.28" y="-99.06" size="1.143" layer="96" font="vector" ratio="10" align="center"/>
 </instance>
-<instance part="U$7" gate="G$1" x="226.06" y="-104.14" smashed="yes"/>
+<instance part="U$7" gate="G$1" x="228.6" y="-104.14" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -10016,10 +10017,10 @@ the large DC current draw</text>
 <junction x="83.82" y="-180.34"/>
 </segment>
 <segment>
-<pinref part="R11" gate="G$1" pin="P2"/>
-<wire x1="223.52" y1="-99.06" x2="226.06" y2="-99.06" width="0.1524" layer="91"/>
+<pinref part="LED2" gate="G$1" pin="C"/>
+<wire x1="223.52" y1="-99.06" x2="228.6" y2="-99.06" width="0.1524" layer="91"/>
 <pinref part="U$7" gate="G$1" pin="GND"/>
-<wire x1="226.06" y1="-99.06" x2="226.06" y2="-101.6" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="-99.06" x2="228.6" y2="-101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -10081,7 +10082,7 @@ the large DC current draw</text>
 <wire x1="226.06" y1="-114.3" x2="200.66" y2="-114.3" width="0.1524" layer="91"/>
 <junction x="226.06" y="-114.3"/>
 <junction x="200.66" y="-114.3"/>
-<pinref part="LED2" gate="G$1" pin="C"/>
+<pinref part="R11" gate="G$1" pin="P1"/>
 <wire x1="203.2" y1="-99.06" x2="200.66" y2="-99.06" width="0.1524" layer="91"/>
 <junction x="200.66" y="-99.06"/>
 </segment>
@@ -10335,9 +10336,9 @@ the large DC current draw</text>
 </net>
 <net name="N$19" class="0">
 <segment>
-<pinref part="R11" gate="G$1" pin="P1"/>
+<pinref part="R11" gate="G$1" pin="P2"/>
 <pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="213.36" y1="-99.06" x2="210.82" y2="-99.06" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="-99.06" x2="215.9" y2="-99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
