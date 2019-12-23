@@ -16,6 +16,10 @@
  * 
  * CHANGELOG:
  * ----------
+ * 12/23/2019
+ * - Updated Pinout to reflect PCB wiring
+ * - Modifications for 2 strips of LEDs (pixels_1 and pixels_2)
+ * 
  * 12/4/2019
  * - Added Mister Relay control to Pin 5
  * 
@@ -85,14 +89,6 @@
   #include <Adafruit_NeoPixel.h>        // https://github.com/adafruit/Adafruit_NeoPixel
   //#include <Adafruit_MCP23008.h>        // I2C 8 Expander IC // https://github.com/adafruit/Adafruit-MCP23008-library
   #include <Adafruit_MCP23017.h>        // I2C 16 Expander IC//https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library
-  
-  
-  //#include <SD.h>         //included in Arduino IDE core
-  
-  //#include <DHT.h>        // Updated to using Adafruit DHT Library https://github.com/adafruit/DHT-sensor-library
-                          // Requires Adafruit Libraries "DHT_sensor_library" and "Adafruit_Unified_Sensor"
-                          // Setup Instructions here: https://learn.adafruit.com/dht/using-a-dhtxx-sensor
-  
 
   
   #if SOFTWARE_SERIAL_AVAILABLE
@@ -150,19 +146,30 @@
   // NOTE: See BluefruitConfig.h for other pin definitions
   
   #define PIN_ONBOARD_LED                       13   // Built-in LED pin
-  #define PIN_CS                                10  // output - Chip Select for SPI device
-
-  #define PIN_PIXELS                            12  // NeoPixel strip
   
+  #define PIN_PIXELS_1                          12  // NeoPixel strip 1
+  #define PIN_PIXELS_2                          11  // NeoPixel strip 1
+  
+  #define PIN_CS                                10  // output - Chip Select for SPI device, used by BLE module
+  #define PIN_AMP_SHTDN                               10  // output - nSHUTDOWN pin on Audio Amplifier board
+                                                //9
   #define PIN_FAN                               6   // output - PWM control MOSFET to Blower Fan
   #define PIN_MIST                              5   // output - MOSFET to Mister / Bubbler Relay - do NOT PWM control
-  #define PIN_AMP                               10  // output - nSHUTDOWN pin on Audio Amplifier board
-
-  #define PIN_ENCODER_A                         1  // Labeled "CLK" pin on Encoder board 
-  #define PIN_ENCODER_B                         0  // Labeled "DT" pin on Encoder board
-  #define PIN_ENCODER_SW                        11   // Labeled "SW" pin on Encoder board (uses interrupt)
-
+                                                //I2C-SCL
+                                                //I2C-SDA
+                                                
   #define PIN_CURRENT_MONITOR                   A0  // Analog Current Monitor, readout = 1A / V
+                                                //A1
+                                                //A2
+                                                //A3
+                                                //A4
+  #define PIN_ENCODER_SW                        A5   // Encoder Switch, active LOW, no interrupt
+                                                //SCK
+                                                //MOSI
+                                                //MISO
+  #define PIN_ENCODER_A                         0  // RX0, interrupt driven
+  #define PIN_ENCODER_B                         1  // TX1, interrupt driven
+
 
   // I2C Expander Pin Defines
   // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library#Pin-Addressing
@@ -201,20 +208,12 @@
   #define APP_BTN_RIGHT                         8   // 
   
   
-  // Sensor Settings
-  //-------------
-  //#define DHTTYPE                               DHT11     // Tells Adafruit DHTXX Library which type of DHT sensor to use
-  
   // Serial Settings
   //-------------
   #define SERIAL_BAUD_RATE                      115200    // (bps)
 
   // PWM Settings
   //-------------
-  //#define PWM_DEFAULT_PERCENT                   0.50      // (%) default PWM duty cycle
-  //#define PWM_INCREMENT                         0.004      // (%) controller increments
-  //#define PWM_MAX                               1.00      // (%) Max PWM duty cycle % allowed in software
-  //#define PWM_MIN                               0.00      // (%) Min PWM duty cycle % allowed in software
 
   #define PWM_DEFAULT                           4      // (0 - 255) default PWM duty cycle
   #define PWM_INCREMENT                         4        // (0 - 255) controller increments
@@ -229,7 +228,8 @@
 
   // NeoPixel Settings
   //-------------
-  #define NUM_PIXELS                            31      // Number of Pixels being addressed
+  #define NUM_PIXELS_1                            28      // Number of Pixels in a strip
+  #define NUM_PIXELS_2                            28      // Number of Pixels in a strip
 
 
 /*=========================================================================*/
@@ -292,7 +292,8 @@
 
   // NeoPixel Object
   //-------------
-  Adafruit_NeoPixel pixels(NUM_PIXELS, PIN_PIXELS, NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel pixels(NUM_PIXELS_1, PIN_PIXELS_1, NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel pixels_2(NUM_PIXELS_2, PIN_PIXELS_2, NEO_GRB + NEO_KHZ800);
   // Argument 1 = Number of pixels in NeoPixel strip
   // Argument 2 = Arduino pin number (most are valid)
   // Argument 3 = Pixel type flags, add together as needed:
@@ -368,9 +369,27 @@
     return modeString[m+1]; // enum Mode starts at -1
   }
 
+  // Set all Pixels to OFF
+  // -------------------
+  void allPixelsOff()
+  {
+    for(uint8_t i=0; i < NUM_PIXELS_1; i++) 
+    {
+      pixels.setPixelColor(i, pixels.Color(0,0,0)); // off
+    }   
+
+    for(uint8_t i=0; i < NUM_PIXELS_2; i++) 
+    {
+      pixels_2.setPixelColor(i, pixels_2.Color(0,0,0)); // off
+    }
+
+    pixels.show();
+    pixels_2.show();
+  }
+
   // EasyButton Callback Functions
   // -------------------
-    void buttonISR()      // Interrupt driven button response, redirects to callback functions below
+  void buttonISR()      // Interrupt driven button response, redirects to callback functions below
   {
     //When button is being used through external interrupts, parameter INTERRUPT must be passed to read() function
     button.read(INTERRUPT);
@@ -436,7 +455,7 @@
 
     pinMode(PIN_FAN, OUTPUT);                   // 
     pinMode(PIN_MIST, OUTPUT);                  // 
-    pinMode(PIN_AMP, OUTPUT);                   //
+    pinMode(PIN_AMP_SHTDN, OUTPUT);                   //
 
     pinMode(PIN_CURRENT_MONITOR, INPUT);
     
@@ -444,14 +463,10 @@
     // NeoPixel Setup
     //-------------
     pixels.begin();
+    pixels_2.begin();
 
     // Set all Pixels to OFF
-    for(uint8_t i=0; i < NUM_PIXELS; i++) 
-    {
-      pixels.setPixelColor(i, pixels.Color(0,0,0)); // off
-    }
-    pixels.show();
-
+    allPixelsOff();
  
     // EasyButton Setup
     //-------------
@@ -571,7 +586,7 @@
 
    digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
 
-   digitalWrite(PIN_AMP, HIGH);                    // Enable Audio Amplifer Board
+   digitalWrite(PIN_AMP_SHTDN, HIGH);                    // Enable Audio Amplifer Board
     
   } // END SETUP
 
@@ -880,11 +895,7 @@
       //analogWrite(PIN_MIST, mistPwm);
       digitalWrite(PIN_MIST, mistState); 
 
-      for(uint8_t i=0; i < NUM_PIXELS; i++) 
-      {
-        pixels.setPixelColor(i, pixels.Color(0,0,0)); // off
-      }
-      pixels.show();
+      allPixelsOff();
       
     }
 
