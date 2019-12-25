@@ -17,7 +17,8 @@
  * CHANGELOG:
  * ----------
  * 12/24/2019
- * - 
+ * - Running 2 strips of LEDs
+ * - Changed to FSM model
  * 
  * 12/23/2019
  * - Updated Pinout to reflect PCB wiring
@@ -140,7 +141,7 @@
   
   // App Details
   //------------
-  #define FIRMWARE_VERSION                        "v0.1"
+  #define FIRMWARE_VERSION                        "v0.2"
   #define FIRMWARE_NAME                           "HumidiFire"
   #define BLE_DEV_NAME_PREFIX                     "HumidiFire-" // 16 char max
 
@@ -242,6 +243,7 @@
   
   bool ledState = true;           // var to toggle onboard LED state
 
+/*
   enum Mode
   {
     OFF = -1,     // Sytem off, standby
@@ -258,6 +260,20 @@
 
   Mode currentMode;      // declare enum object
   Mode previousMode;
+  */
+
+  enum fsmStateEnum
+  {
+    OFF = -1,     // Sytem off, standby
+    
+    START_CAMPFIRE,     // start-up sequence before runtime state
+    RUN_CAMPFIRE,       // Orange, Red, & Yellow; Crackling fire
+    
+    NUM_MODES    // Keep in LAST place - translates to the number of modes in the list (1-indexed)
+    
+  }; // END enum Modes
+
+  fsmStateEnum fsmState;  //declare enum var
 
   byte fanPwm;         // PWM Duty Cycle 0 - 255
   //byte mistPwm;        // PWM Duty Cycle 0 - 255
@@ -355,21 +371,20 @@
   void printHex(const uint8_t * data, const uint32_t numBytes);
 
 
-  // function to print Mode enum as a string
-  String modeToString(enum Mode m)
+  // function to print enum as a string
+  String fsmStateToString(enum fsmStateEnum m)
   {
-    String modeString[] = 
+    String fsmStateString[] = 
     {
         "OFF",      // = -1
         
-        "CAMPFIRE",
-        "SEASHORE",
-        "TROPICS",
+        "START_CAMPFIRE",
+        "RUN_CAMPFIRE",
         
         "NUM_MODES" // Keep LAST to automatically designate the number of modes in the enum list
      };
 
-    return modeString[m+1]; // enum Mode starts at -1
+    return fsmStateString[m+1]; // enum Mode starts at -1
   }
 
   // Set all Pixels to OFF
@@ -401,7 +416,9 @@
   void onPressed_cb()
   {
     settingsUpdate = true;      //handle in Update Displays
-    
+
+    // Mute routine
+    /*
     //if(currentMode < NUM_MODES)  // if not at the last mode, increment to the next mode
     if(currentMode < CAMPFIRE)     // temporary limit to toggle between CAMPFIRE and OFF
     {
@@ -416,6 +433,7 @@
     {
       //Serial.println("onPressed_cb()");
     }
+    */
     
   } // END onPressed_cb()
 
@@ -448,7 +466,7 @@
     Wire.begin();
     //dht.begin();
     Serial.begin(SERIAL_BAUD_RATE);               // Sets the mode of communication between the CPU and the computer or other device to the serial value     
-    delay(500);                                   // Short delay to allow Serial Port to open
+    //delay(500);                                   // Short delay to allow Serial Port to open
     
     // ------------------------------- //
     // -- Setup I/O Pins -- //
@@ -537,9 +555,11 @@
     //analogWrite(PIN_MIST, mistPwm);    // PWM = 0, initialize Mister off
     digitalWrite(PIN_MIST, mistState);        // initialize Mister
 
-    currentMode = CAMPFIRE;                                  // initialize mode to CAMPFIRE
+    //currentMode = CAMPFIRE;                                  // initialize mode to CAMPFIRE
     //currentMode = OFF;                                  // initialize mode to OFF
-    previousMode = currentMode;                     // initialize state of previousMode to currentMode
+    //previousMode = currentMode;                     // initialize state of previousMode to currentMode
+
+    fsmState = START_CAMPFIRE;
     
     // Initialize Encoder
     rotaryEncoder.write(0);                      // Initialize Encoder Accumulator to 0
@@ -589,7 +609,7 @@
 
    digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
 
-   digitalWrite(PIN_AMP_SHTDN, HIGH);                    // Enable Audio Amplifer Board
+   //digitalWrite(PIN_AMP_SHTDN, HIGH);                    // Enable Audio Amplifer Board
     
   } // END SETUP
 
@@ -626,6 +646,7 @@
       
         if((buttnum == APP_BTN_1) && (pressed == 1))   //When '1' button is pressed
         {
+          /*
           if(currentMode == CAMPFIRE)
           {
             currentMode = OFF;        // toggle mode on/off
@@ -634,6 +655,7 @@
           {
             currentMode = CAMPFIRE;        
           }
+          */
           
         } // END '1' Button
 
@@ -807,21 +829,65 @@
 
     // END Handle Rotary Encoder Updates
 
-    /*
     // ------------------------------- //
-    // -- Get DHT11 Temp & Humidity Readings -- //
-    // ------------------------------- //
-    // Reading temperature or humidity takes about 250 milliseconds!
-    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-    float dhtTempF = dht.readTemperature(true);                       // Read temperature as Fahrenheit (isFahrenheit = true)
-    float dhtHum = dht.readHumidity();                                // Read Humidity %
-    float dhtHeatIndexF = dht.computeHeatIndex(dhtTempF, dhtHum);     // Compute heat index in Fahrenheit (the default)
-    */
+    // -- Finite Stsate Machine -- //
+    // ------------------------------- // 
+
+     switch(fsmState)
+      {
+        case START_CAMPFIRE:
+
+          //start mister
+          digitalWrite(PIN_MIST, mistState);
+          
+          //light campfire sound effect
+          i2cExpander.digitalWrite(PIN_I2C_FX_T01, ENABLE); 
+
+          //after 2 sec, fire catch sound happens
+          //unsigned long soundEffectTimer = millis(); 
+          delay(2000);
+          
+          //flash lights
+          pixels2.clear();
+          pixels2.setPixelColor(NUM_PIXELS_2, pixels.Color(255, 255, 255));
+          pixels2.setPixelColor(NUM_PIXELS_2+1, pixels.Color(255, 255, 255));
+          pixels2.setPixelColor(NUM_PIXELS_211, pixels.Color(255, 255, 255));
+          pixels2.show();
+
+          delay(25);        //leave lights on for some time
+          pixels2.clear();  //turn lights off
+          
+          //start fan at max to kick start
+          analogWrite(PIN_FAN, 255);
+                
+          delay(1000);      
+
+          fanPwm = PWM_DEFAULT;
+          mistState = true;
+        
+          // Go To next state...
+          fsmState = RUN_CAMPFIRE;  
+          
+          break;  // END START_CAMPFIRE
+
+        case RUN_CAMPFIRE:
+        
+          analogWrite(PIN_FAN, fanPwm);
+          digitalWrite(PIN_MIST, mistState);
+          
+          flame1();
+          flame2();
+ 
+          break;  // END RUN_CAMPFIRE
+
+      } //END Finite State Machine
+          
+
 
     // ------------------------------- //
     // -- Set Mode Characteristics -- //
     // ------------------------------- //   
-
+    /*
     if(currentMode != previousMode)           // if mode has changed, set mode vars
     {
       previousMode = currentMode;             // reset previousMode
@@ -864,12 +930,6 @@
           
       } // END switch(currentMode)
       
-      /*
-      if(Serial)
-      {
-        Serial.print("Mode: ");
-        Serial.println(modeToString(currentMode));
-      }
       */
 
       
@@ -880,6 +940,7 @@
     // -- Run Mode Operations -- //
     // ------------------------------- //
 
+    /*
     if(currentMode != OFF)
     {
       flame1();
@@ -902,6 +963,7 @@
       allPixelsOff();
       
     }
+    */
 
     // ------------------------------- //
     // -- Update Displays (BLE & Serial -- //
@@ -922,8 +984,11 @@
           Serial.println();
           Serial.println();
           
-          Serial.print("Mode:\t");
-          Serial.print(modeToString(currentMode));
+          //Serial.print("Mode:\t");
+          //Serial.print(modeToString(currentMode));
+
+          Serial.print("State:\t");
+          Serial.print(fsmStateToString(fsmState));
   
           Serial.println();
           
@@ -945,9 +1010,13 @@
           ble.println();  // Clear the previous 2 lines from the screen
           ble.println();  // Clear the previous 2 lines from the screen
           
-          ble.print("Mode:\t");
+          //ble.print("Mode:\t");
           //ble.print(currentMode);
-          ble.print(modeToString(currentMode));
+          //ble.print(modeToString(currentMode));
+
+          ble.print("State:\t");
+          //ble.print(currentMode);
+          ble.print(fsmStateToString(fsmState));
   
           ble.println();
           
