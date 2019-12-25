@@ -250,8 +250,8 @@ void flame1()
   
   for(int x = 0; x < pixels1.numPixels(); x++)
   {
-    //int flicker = random(0,150);
-    int flicker = random(0,55);
+    int flicker = random(0,150);
+    //int flicker = random(0,55);
     int r1 = r-flicker;
     int g1 = g-flicker;
     int b1 = b-flicker;
@@ -261,14 +261,15 @@ void flame1()
     pixels1.setPixelColor(x, r1, g1, b1);
     pixels1.show();
     
-    delay(random(0,15));
+    //delay(random(0,15));
+    delay(random(0,3));
   }
   
 } // END flame1()
 
 void flame2()
 {
-
+  //int r = 255,  g = 160,  b = 40;     //  flame
   //int r = 200,  g = 160,  b = 40;     // Yellow flame
   int r = 226,  g = 121,  b = 35;     // Orange flame
   //int r = 158,  g = 8,    b = 148;    // Purple flame 
@@ -276,8 +277,8 @@ void flame2()
   
   for(int x = 0; x < pixels2.numPixels(); x++)
   {
-    //int flicker = random(0,150);
-    int flicker = random(0,55);
+    int flicker = random(0,150);
+    //int flicker = random(0,55);
     int r1 = r-flicker;
     int g1 = g-flicker;
     int b1 = b-flicker;
@@ -287,7 +288,7 @@ void flame2()
     pixels2.setPixelColor(x, r1, g1, b1);
     pixels2.show();
     
-    delay(random(0,15));
+    delay(random(0,3));
   }
   
 } // END flame2()

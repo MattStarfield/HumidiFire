@@ -141,7 +141,7 @@
   
   // App Details
   //------------
-  #define FIRMWARE_VERSION                        "v0.2"
+  #define FIRMWARE_VERSION                        "v1.0"
   #define FIRMWARE_NAME                           "HumidiFire"
   #define BLE_DEV_NAME_PREFIX                     "HumidiFire-" // 16 char max
 
@@ -219,8 +219,8 @@
   // PWM Settings
   //-------------
 
-  #define PWM_DEFAULT                           32      // (0 - 255) default PWM duty cycle
-  #define PWM_INCREMENT                         4        // (0 - 255) controller increments
+  #define PWM_DEFAULT                           1      // (0 - 255) default PWM duty cycle
+  #define PWM_INCREMENT                         1        // (0 - 255) controller increments
   #define PWM_MAX                               255      // (0 - 255) Max PWM duty cycle allowed in software
   #define PWM_MIN                               0        // (0 - 255) Min PWM duty cycle allowed in software
 
@@ -235,6 +235,8 @@
   #define NUM_PIXELS_1                            28      // Number of Pixels in a strip
   #define NUM_PIXELS_2                            28      // Number of Pixels in a strip
 
+  #define LOW_WATER_CURRENT_THRESHOLD             1       // if current monitor reads below this threshold, device goes to LOW_WATER state
+
 
 /*=========================================================================*/
 // == Declare Global Variables == //
@@ -242,6 +244,8 @@
   extern uint8_t packetbuffer[];          // the packet buffer for Bluetooth communication
   
   bool ledState = true;           // var to toggle onboard LED state
+
+  bool muteState = false;         //true = mute, false = unmute;
 
 /*
   enum Mode
@@ -268,6 +272,7 @@
     
     START_CAMPFIRE,     // start-up sequence before runtime state
     RUN_CAMPFIRE,       // Orange, Red, & Yellow; Crackling fire
+    LOW_WATER,
     
     NUM_MODES    // Keep in LAST place - translates to the number of modes in the list (1-indexed)
     
@@ -279,17 +284,15 @@
   //byte mistPwm;        // PWM Duty Cycle 0 - 255
   bool mistState;      // Mister Control Relay State  
 
-  bool settingsUpdate;      // flag that settings have been changed by BLE or button control 
+  bool settingsUpdate;      // flag that settings have been changed by BLE or button control
 
-  //long previousEncoderPos;
-  //long currentEncoderPos;
+  float currentMonitor;
+
 
 /*=========================================================================*/
 // == Global Objects == //
 /*=========================================================================*/
  
-  //File dataFile;                // SD Card File Object 
-  //DHT dht(PIN_DHT, DHTTYPE);    // DHT11 Temperature and Humidity Sensor Object
 
   // Rotary Encoder Object
   //-------------
@@ -380,6 +383,7 @@
         
         "START_CAMPFIRE",
         "RUN_CAMPFIRE",
+        "LOW_WATER",
         
         "NUM_MODES" // Keep LAST to automatically designate the number of modes in the enum list
      };
@@ -389,6 +393,7 @@
 
   // Set all Pixels to OFF
   // -------------------
+  /* // replaced with pixels.clear();
   void allPixelsOff()
   {
     for(uint8_t i=0; i < NUM_PIXELS_1; i++) 
@@ -404,6 +409,7 @@
     pixels1.show();
     pixels2.show();
   }
+  */
 
   // EasyButton Callback Functions
   // -------------------
@@ -418,6 +424,17 @@
     settingsUpdate = true;      //handle in Update Displays
 
     // Mute routine
+    muteState = !muteState;
+    if(muteState) //mute if true
+    {
+      digitalWrite(PIN_AMP_SHTDN, LOW); 
+    }
+    else          //unmute if false
+    {
+      digitalWrite(PIN_AMP_SHTDN, HIGH); 
+    }
+    
+    
     /*
     //if(currentMode < NUM_MODES)  // if not at the last mode, increment to the next mode
     if(currentMode < CAMPFIRE)     // temporary limit to toggle between CAMPFIRE and OFF
@@ -454,7 +471,8 @@
     }
     
   } // END onSequence_cb()
-  
+
+ 
 
 //=========================================================================//
 // == Setup == //
@@ -478,8 +496,7 @@
     pinMode(PIN_MIST, OUTPUT);                  // 
     pinMode(PIN_AMP_SHTDN, OUTPUT);                   //
 
-    pinMode(PIN_CURRENT_MONITOR, INPUT);
-    
+    pinMode(PIN_CURRENT_MONITOR, INPUT);    
     
     // NeoPixel Setup
     //-------------
@@ -487,7 +504,9 @@
     pixels2.begin();
 
     // Set all Pixels to OFF
-    allPixelsOff();
+    //allPixelsOff();
+    pixels1.clear();
+    pixels2.clear();
  
     // EasyButton Setup
     //-------------
@@ -548,7 +567,6 @@
     settingsUpdate = false;
 
     fanPwm   = 0;                       // Duty Cycle of PWM signal, translates to blower fan speed
-    //mistPwm  = 0;                       // Duty Cycle of PWM signal, translates to mister intensity
     mistState = false;
     
     analogWrite(PIN_FAN, fanPwm);      // PWM = 0, initialize Fan
@@ -609,7 +627,8 @@
 
    digitalWrite(PIN_ONBOARD_LED, ledState);        // shows that code has gotten this far by lighting LED
 
-   //digitalWrite(PIN_AMP_SHTDN, HIGH);                    // Enable Audio Amplifer Board
+   // Enable Audio Amplifer Board
+   digitalWrite(PIN_AMP_SHTDN, HIGH); 
     
   } // END SETUP
 
@@ -621,6 +640,7 @@
   {
     //button.update();  // EasyButton: update() function must be called repeatedly only if onPressedFor functionality is being used and interrupt is enabled
     button.read(PIN_ENCODER_SW); // EasyButton: read() checks button for non-interrupt enabled pins
+
 
     // ---------------------------------------------------- //
     // -- Handle Incoming Bluetooth Control Pad Packets -- //
@@ -769,8 +789,14 @@
 
       if(encoderDelta > 0)                                        // encoder moved in POSITIVE direction
       {
-        if((fanPwm + encoderDelta) >= PWM_MAX){fanPwm = PWM_MAX;} // do not go above PWM_MAX
-        else {fanPwm += encoderDelta;}                            // increase by encoderDelta
+        //if((fanPwm + encoderDelta) >= PWM_MAX){fanPwm = PWM_MAX;} // do not go above PWM_MAX
+        //else {fanPwm += encoderDelta;}                            // increase by encoderDelta
+
+        // tap VOL+
+        i2cExpander.digitalWrite(PIN_I2C_FX_VLP, LOW);
+        delay(10);
+        i2cExpander.digitalWrite(PIN_I2C_FX_VLP, HIGH);
+        
 
         /*
         if(Serial)
@@ -786,9 +812,14 @@
       
       if (encoderDelta < 0)                                  // encoder moved in NEGATIVE direction
       {
-        if((fanPwm + encoderDelta) <= PWM_MIN){fanPwm = PWM_MIN;} // do not go below PWM_MIN
-        else {fanPwm += encoderDelta;}                            // decrease by encoderDelta (add a negative)
+        //if((fanPwm + encoderDelta) <= PWM_MIN){fanPwm = PWM_MIN;} // do not go below PWM_MIN
+        //else {fanPwm += encoderDelta;}                            // decrease by encoderDelta (add a negative)
 
+         // tap VOL-
+        i2cExpander.digitalWrite(PIN_I2C_FX_VLN, LOW);
+        delay(10);
+        i2cExpander.digitalWrite(PIN_I2C_FX_VLN, HIGH);
+        
         /*
         if(Serial)
         { 
@@ -836,36 +867,70 @@
      switch(fsmState)
       {
         case START_CAMPFIRE:
-
-          //start mister
-          digitalWrite(PIN_MIST, mistState);
+                                      
+          //light campfire sound effect ON
+          i2cExpander.digitalWrite(PIN_I2C_FX_T01, ENABLE);
           
-          //light campfire sound effect
-          i2cExpander.digitalWrite(PIN_I2C_FX_T01, ENABLE); 
+          pixels1.setBrightness(255);
+          pixels2.setBrightness(255);
 
-          //after 2 sec, fire catch sound happens
-          //unsigned long soundEffectTimer = millis(); 
-          delay(2000);
-          
           //flash lights
           pixels2.clear();
-          pixels2.setPixelColor(NUM_PIXELS_2, pixels.Color(255, 255, 255));
-          pixels2.setPixelColor(NUM_PIXELS_2+1, pixels.Color(255, 255, 255));
-          pixels2.setPixelColor(NUM_PIXELS_211, pixels.Color(255, 255, 255));
+          pixels2.setPixelColor((NUM_PIXELS_2)*.5, pixels2.Color(255, 255, 255));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)+2, pixels2.Color(255, 255, 255));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)-2, pixels2.Color(255, 255, 255));
           pixels2.show();
 
           delay(25);        //leave lights on for some time
           pixels2.clear();  //turn lights off
+          pixels2.show();
+
+          //after 2 sec, fire catch sound happens
+          delay(1800);
+
+          //light campfire sound effect OFF
+          i2cExpander.digitalWrite(PIN_I2C_FX_T01, DISABLE); 
+          
+          //flash lights
+          pixels2.clear();
+          pixels2.setPixelColor((NUM_PIXELS_2)*.5, pixels2.Color(255, 255, 255));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)+1, pixels2.Color(255, 255, 255));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)-1, pixels2.Color(255, 255, 255));
+          pixels2.show();
+
+          delay(25);        //leave lights on for some time
+          pixels2.clear();  //turn lights off
+          pixels2.show();
           
           //start fan at max to kick start
-          analogWrite(PIN_FAN, 255);
-                
-          delay(1000);      
+          analogWrite(PIN_FAN, 15);
 
+          //start mister
+          digitalWrite(PIN_MIST, true);
+                
+          //delay(1000);
+
+          // slowly increase brightness
+          for(int i=0; i < 255; i=i+8)
+          {
+            pixels1.setBrightness(i);
+            flame1();
+            pixels2.setBrightness(i);
+            flame2();
+            //delay(5);
+          }
+
+          pixels1.setBrightness(255);
+          pixels2.setBrightness(255);
+               
+          // Setup next state...
+          
           fanPwm = PWM_DEFAULT;
           mistState = true;
-        
-          // Go To next state...
+          
+          //run campfire sound effect ON
+          i2cExpander.digitalWrite(PIN_I2C_FX_T00, ENABLE);
+          
           fsmState = RUN_CAMPFIRE;  
           
           break;  // END START_CAMPFIRE
@@ -877,93 +942,64 @@
           
           flame1();
           flame2();
+
+          /*
+          // Blueish center accents 
+          pixels2.setPixelColor((NUM_PIXELS_2)*.5, pixels2.Color(0, 10, 30));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)+1, pixels2.Color(0, 10, 30));
+          pixels2.setPixelColor((NUM_PIXELS_2*.5)-1, pixels2.Color(0, 10, 30));
+          pixels2.show();
+          */
  
           break;  // END RUN_CAMPFIRE
+
+        case LOW_WATER:
+        
+          // turn off all things
+          analogWrite(PIN_FAN, 0);
+          digitalWrite(PIN_MIST, false);
+          digitalWrite(PIN_AMP_SHTDN, LOW); 
+          
+          pixels1.clear();
+          pixels1.show();
+          
+          pixels2.clear();
+          pixels2.show();
+          
+          // Low Water Indicator LEDs
+          for(int i = 0; i < 4; i++)
+          {
+            pixels2.setPixelColor(i, pixels2.Color(128, 0, 0));
+            pixels2.show();
+            delay(500);           
+          }
+
+          //test to exit LOW_WATER state
+          currentMonitor = analogRead(PIN_CURRENT_MONITOR);
+    
+          if(currentMonitor > LOW_WATER_CURRENT_THRESHOLD)
+          {
+            fsmState = RUN_CAMPFIRE;
+          }
+                    
+          break;  // END LOW_WATER
 
       } //END Finite State Machine
           
 
-
     // ------------------------------- //
-    // -- Set Mode Characteristics -- //
+    // -- Check for Low Water -- //
     // ------------------------------- //   
-    /*
-    if(currentMode != previousMode)           // if mode has changed, set mode vars
-    {
-      previousMode = currentMode;             // reset previousMode
-      
-      switch(currentMode)
-      {
-        case OFF:
-        
-          fanPwm = 0;
-          //mistPwm = 0;
-          mistState = false;
-
-          i2cExpander.digitalWrite(PIN_I2C_FX_T00, DISABLE);
- 
-          break;  // END OFF
-          
-        case CAMPFIRE:
-        
-          fanPwm = PWM_DEFAULT;
-          //mistPwm = PWM_MAX;
-          mistState = true;     // Mister ON
-
-          i2cExpander.digitalWrite(PIN_I2C_FX_T00, ENABLE);
-                 
-          break;  // END CAMPFIRE
-          
-        case SEASHORE:
-  
-          break;  // END SEASHORE
-          
-        case TROPICS:
-  
-          break;  // END TROPICS
-               
-        default:
-        
-          // add default case here (optional)
-          
-          break;  // END default
-          
-      } // END switch(currentMode)
-      
-      */
-
-      
-    } // END if (mode changed)
-
+    currentMonitor = analogRead(PIN_CURRENT_MONITOR);
     
-    // ------------------------------- //
-    // -- Run Mode Operations -- //
-    // ------------------------------- //
-
-    /*
-    if(currentMode != OFF)
+    if(currentMonitor < LOW_WATER_CURRENT_THRESHOLD)
     {
-      flame1();
-      flame2();      
-      
-      analogWrite(PIN_FAN, fanPwm);
-      //analogWrite(PIN_MIST, mistPwm);  
-      digitalWrite(PIN_MIST, mistState); 
+      fsmState = LOW_WATER;
     }
-    else
-    {
-      fanPwm = 0;                    // This prevents settings from being changed when in OFF mode
-      //mistPwm = 0;
-      mistState = false;
-      
-      analogWrite(PIN_FAN, fanPwm);
-      //analogWrite(PIN_MIST, mistPwm);
-      digitalWrite(PIN_MIST, mistState); 
 
-      allPixelsOff();
-      
-    }
-    */
+    //ble.print("Current: ");
+    //ble.println(currentMonitor);
+    
 
     // ------------------------------- //
     // -- Update Displays (BLE & Serial -- //
