@@ -1,7 +1,7 @@
-# Project Name
-A brief description of the project's function and purpose
+# HumidiFire
+A water vapor based fireplace simulator
 
-<img src="/img/!main.png" alt="!main.png" width="600">
+<img src="/img/humidifire.gif" alt="humidifire.gif" width="400">
 
 ### Table of Contents
 * [Documentation](#Documentation)
